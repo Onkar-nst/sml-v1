@@ -87,7 +87,11 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   background: currentColor;
   border-radius: 2px;
 }
-.eyebrow--light { color: #fff; }
+/* most sections sit on white, so the "light" variant stays green; only the
+   genuinely dark panels flip it to white */
+.eyebrow--light { color: var(--green); }
+.cta-card .eyebrow--light,
+.cert-card .eyebrow--light { color: #fff; }
 
 .section-head { max-width: 680px; margin-bottom: 2.8rem; }
 .section-head.center { margin-inline: auto; text-align: center; }
@@ -124,6 +128,10 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 
 .btn-ghost { border-color: rgba(255, 255, 255, .55); color: #fff; }
 .btn-ghost:hover { background: #fff; color: var(--navy); border-color: #fff; transform: translateY(-2px); }
+
+/* solid white button, for use on the dark navy panels */
+.btn-cream { background: #fff; color: var(--navy); }
+.btn-cream:hover { transform: translateY(-2px); color: var(--green); box-shadow: var(--shadow); }
 
 /* ---------- scroll reveal sequence ---------- */
 
@@ -330,42 +338,23 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 }
 .pill:hover .pill-arrow { transform: translateX(3px); }
 
-/* right column — product shot floating over soft colour glows */
+/* right column — one big, plain product shot */
 .hero-visual {
   position: relative;
   display: flex;
   justify-content: center;
   animation: riseIn .9s var(--ease) both .45s;
 }
-.hero-blob { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
-.hero-blob-1 {
-  width: 420px; height: 400px;
-  bottom: -60px; right: -30px;
-  background: rgba(67, 121, 31, .22);
-  filter: blur(60px);
-}
-.hero-blob-2 {
-  width: 220px; height: 220px;
-  top: -20px; right: 60px;
-  background: rgba(25, 49, 116, .16);
-  filter: blur(55px);
-}
+/* decorative colour glows removed — the layout stays flat and white */
+.hero-blob { display: none; }
+
 .hero-card {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 380px);
+  width: 100%;
   background: #fff;
-  border: 1px solid var(--line-soft);
   border-radius: var(--radius-lg);
-  padding: 1.1rem;
-  box-shadow: 0 24px 50px rgba(25, 49, 116, .16);
-  animation: heroFloat 5s ease-in-out infinite;
+  overflow: hidden;
 }
-.hero-card img { width: 100%; border-radius: calc(var(--radius-lg) - 8px); }
-@keyframes heroFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-14px); }
-}
+.hero-card img { width: 100%; border-radius: var(--radius-lg); }
 
 .hero h1 { animation: riseIn .7s var(--ease) both .1s; }
 .hero .hero-tags { animation: riseIn .7s var(--ease) both .22s; }
@@ -457,11 +446,32 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   align-items: center;
 }
 
+.about-media { position: relative; }
 .about-media img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius-lg);
+}
+
+/* flat green stat chip sitting on the image corner */
+.about-badge {
+  position: absolute;
+  left: 1.1rem; bottom: 1.1rem;
+  background: var(--green);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: .7rem 1.1rem;
+  line-height: 1.2;
+}
+.about-badge b { display: block; font-size: 1.5rem; font-weight: 750; }
+.about-badge span {
+  display: block;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .9;
 }
 
 .about-copy p { font-size: 1.01rem; }
@@ -1128,8 +1138,8 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   .presence-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
   .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .hero-visual { justify-content: flex-start; }
-  .hero-card { width: min(100%, 330px); }
+  /* the product shot stays full-bleed on one column rather than shrinking */
+  .hero-card { width: 100%; }
   .why-card { width: clamp(220px, 40vw, 260px); }
   .div-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-media { max-width: 380px; }
