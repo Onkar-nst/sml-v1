@@ -271,9 +271,16 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 
 .hero-zone { position: relative; overflow: hidden; background: #fff; }
 
-/* the page background stays plain white — photography earns its space at full
-   strength further down rather than as a washed-out backdrop behind text */
-.hero-zone-bg { display: none; }
+/* one field photo runs behind both hero and why, veiled back to near-white so
+   the navy/green type stays fully legible over it */
+.hero-zone-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-zone-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .3; }
+.hero-zone-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .88), rgba(255, 255, 255, .66) 50%, rgba(255, 255, 255, .92));
+}
 
 .hero-zone .hero,
 .hero-zone .why { position: relative; z-index: 1; }
@@ -338,23 +345,115 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 }
 .pill:hover .pill-arrow { transform: translateX(3px); }
 
-/* right column — one big, plain product shot */
+/* right column — a seedling that draws itself on a ~7s loop */
 .hero-visual {
   position: relative;
   display: flex;
   justify-content: center;
   animation: riseIn .9s var(--ease) both .45s;
 }
-/* decorative colour glows removed — the layout stays flat and white */
 .hero-blob { display: none; }
 
-.hero-card {
-  width: 100%;
-  background: #fff;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
+.grow { width: 100%; max-width: 460px; height: auto; overflow: visible; }
+
+/* every timed piece shares one 7s clock so the scene stays in step */
+.grow-ring,
+.grow-stem,
+.grow-leaf,
+.grow-bud,
+.grow-dot {
+  transform-box: fill-box;
+  animation-duration: 7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: var(--ease);
 }
-.hero-card img { width: 100%; border-radius: var(--radius-lg); }
+
+.grow-ring {
+  fill: none;
+  stroke: var(--navy);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 13;
+  opacity: .3;
+  transform-origin: center;
+  animation-name: growSpin;
+  animation-timing-function: linear;
+}
+.grow-ring--1 { animation-duration: 34s; }
+.grow-ring--2 { animation-duration: 26s; animation-direction: reverse; opacity: .18; }
+
+.grow-soil {
+  stroke: var(--green);
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: .3;
+}
+
+.grow-stem {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 190;
+  stroke-dashoffset: 190;
+  animation-name: growStem;
+}
+
+.grow-leaf { fill: var(--green); }
+.grow-leaf--l { transform-origin: 100% 100%; animation-name: growLeafL; }
+.grow-leaf--r { transform-origin: 0% 100%; animation-name: growLeafR; }
+
+.grow-bud { fill: var(--navy); transform-origin: center; animation-name: growBud; }
+
+.grow-dot { transform-origin: center; animation-name: growFloat; }
+.grow-dot--1 { fill: var(--green); opacity: .5; animation-delay: 0s; }
+.grow-dot--2 { fill: var(--navy); opacity: .35; animation-delay: -2.2s; }
+.grow-dot--3 { fill: var(--green); opacity: .35; animation-delay: -4s; }
+.grow-dot--4 { fill: var(--navy); opacity: .28; animation-delay: -5.4s; }
+
+/* the stem is fully undrawn when the loop restarts, so the reset is invisible */
+@keyframes growStem {
+  0%        { stroke-dashoffset: 190; opacity: 1; }
+  40%       { stroke-dashoffset: 0;   opacity: 1; }
+  88%       { stroke-dashoffset: 0;   opacity: 1; }
+  100%      { stroke-dashoffset: 0;   opacity: 0; }
+}
+@keyframes growLeafL {
+  0%, 26%   { transform: scale(0); opacity: 0; }
+  48%       { transform: scale(1); opacity: 1; }
+  88%       { transform: scale(1); opacity: 1; }
+  100%      { transform: scale(1); opacity: 0; }
+}
+@keyframes growLeafR {
+  0%, 40%   { transform: scale(0); opacity: 0; }
+  62%       { transform: scale(1); opacity: 1; }
+  88%       { transform: scale(1); opacity: 1; }
+  100%      { transform: scale(1); opacity: 0; }
+}
+@keyframes growBud {
+  0%, 56%   { transform: scale(0); opacity: 0; }
+  74%       { transform: scale(1); opacity: 1; }
+  88%       { transform: scale(1); opacity: 1; }
+  100%      { transform: scale(1); opacity: 0; }
+}
+@keyframes growSpin {
+  to { transform: rotate(360deg); }
+}
+@keyframes growFloat {
+  0%, 100%  { transform: translateY(0); }
+  50%       { transform: translateY(-16px); }
+}
+
+/* holding the finished plant on screen beats flickering through the loop */
+@media (prefers-reduced-motion: reduce) {
+  .grow-ring, .grow-stem, .grow-leaf, .grow-bud, .grow-dot {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+  .grow-ring--1 { opacity: .3; }
+  .grow-ring--2 { opacity: .18; }
+}
 
 .hero h1 { animation: riseIn .7s var(--ease) both .1s; }
 .hero .hero-tags { animation: riseIn .7s var(--ease) both .22s; }
@@ -482,16 +581,45 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
    OUR PRESENCE — plain stat grid
    ========================================================================== */
 
-.presence-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* single line, scrolling forever. main.js appends a duplicate set, so shifting
+   the track by exactly -50% lands back on an identical frame — no visible seam. */
+.presence-marquee {
+  overflow: hidden;
   border-top: 1px solid var(--line-soft);
-  border-left: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  /* soften both ends so items enter and leave instead of being chopped off */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
+.presence-track {
+  display: flex;
+  width: max-content;
+  animation: presenceScroll 36s linear infinite;
+}
+.presence-track:hover { animation-play-state: paused; }
+
+@keyframes presenceScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* used when main.js appended more than one duplicate set */
+@keyframes presenceScrollN {
+  from { transform: translateX(0); }
+  to   { transform: translateX(var(--shift, -50%)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* no auto-scroll — let it be a normal swipeable row instead */
+  .presence-track { animation: none; }
+  .presence-marquee { overflow-x: auto; }
+}
+
 .presence {
+  flex: 0 0 auto;
+  width: 250px;
   padding: 1.8rem 1.5rem 1.6rem;
   border-right: 1px solid var(--line-soft);
-  border-bottom: 1px solid var(--line-soft);
   text-align: center;
 }
 .presence-icon {
@@ -1135,7 +1263,6 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 
 @media (max-width: 980px) {
   .about-grid, .brand-panel, .mantra-grid, .trust-grid { grid-template-columns: 1fr; }
-  .presence-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
   .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   /* the product shot stays full-bleed on one column rather than shrinking */
@@ -1176,7 +1303,7 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   .cat-row { grid-template-columns: 1fr; gap: .7rem; }
   .featured-grid { grid-template-columns: repeat(2, 1fr); gap: .8rem; }
   .featured-head { flex-direction: column; gap: .2rem; }
-  .presence-grid { grid-template-columns: 1fr; }
+  .presence { width: 200px; padding: 1.4rem 1.1rem 1.3rem; }
   .footer-grid { grid-template-columns: 1fr; }
   .hero-actions .pill { flex: 1 1 100%; justify-content: space-between; }
   .why-card { width: min(78vw, 265px); }

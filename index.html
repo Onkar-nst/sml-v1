@@ -77,12 +77,24 @@
         </div>
       </div>
 
-      <div class="hero-visual">
-        <span class="hero-blob hero-blob-1"></span>
-        <span class="hero-blob hero-blob-2"></span>
-        <div class="hero-card">
-          <img src="https://sml-ltd.com/wp-content/uploads/2025/10/mazda.jpg" alt="Mazda — SML crop protection product">
-        </div>
+      <!-- decorative: a seedling that draws itself, loops forever -->
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="grow" viewBox="0 0 400 400" role="presentation">
+          <circle class="grow-ring grow-ring--1" cx="200" cy="200" r="152"/>
+          <circle class="grow-ring grow-ring--2" cx="200" cy="200" r="116"/>
+
+          <path class="grow-soil" d="M112 320 h176"/>
+          <path class="grow-stem" d="M200 320 C200 272 200 226 200 148"/>
+
+          <path class="grow-leaf grow-leaf--l" d="M200 254 C158 254 136 230 134 200 C176 198 198 222 200 254 Z"/>
+          <path class="grow-leaf grow-leaf--r" d="M200 214 C242 214 264 190 266 160 C224 158 202 182 200 214 Z"/>
+          <circle class="grow-bud" cx="200" cy="148" r="10"/>
+
+          <circle class="grow-dot grow-dot--1" cx="92"  cy="146" r="5"/>
+          <circle class="grow-dot grow-dot--2" cx="312" cy="112" r="4"/>
+          <circle class="grow-dot grow-dot--3" cx="304" cy="278" r="6"/>
+          <circle class="grow-dot grow-dot--4" cx="104" cy="256" r="4"/>
+        </svg>
       </div>
     </div>
   </section>
@@ -182,7 +194,9 @@
         <span class="eyebrow eyebrow--light">Our Presence</span>
         <h2>Scale that backs the science</h2>
       </div>
-      <div class="presence-grid">
+      <!-- one continuous line; main.js clones the set so the loop is seamless -->
+      <div class="presence-marquee">
+        <div class="presence-track" id="presenceTrack">
 
         <div class="presence">
           <div class="presence-icon">
@@ -238,6 +252,7 @@
           <span class="presence-unit">Growers</span>
         </div>
 
+        </div>
       </div>
     </div>
   </div>

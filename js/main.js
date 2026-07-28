@@ -218,6 +218,35 @@
     revealables.forEach(function (el) { revealer.observe(el); });
   }
 
+  /* --------------------------------------------- presence marquee */
+
+  /* Duplicate the stat set so translateX(-50%) lands on an identical frame.
+     Runs before the counters are wired, so the clones' <b> elements are picked
+     up too and every copy counts up on the same clock. */
+  var presenceTrack = document.getElementById('presenceTrack');
+
+  if (presenceTrack) {
+    var originals = Array.prototype.slice.call(presenceTrack.children);
+
+    // on wide screens one duplicate may not fill the viewport — repeat until it does
+    var setWidth = originals.reduce(function (w, el) { return w + el.offsetWidth; }, 0);
+    var copies = setWidth ? Math.max(1, Math.ceil(window.innerWidth / setWidth)) : 1;
+
+    for (var c = 0; c < copies; c++) {
+      originals.forEach(function (el) {
+        var clone = el.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        presenceTrack.appendChild(clone);
+      });
+    }
+
+    // -50% only lands cleanly on two halves; with more copies, shift by one set
+    if (copies > 1) {
+      presenceTrack.style.setProperty('--shift', '-' + (100 / (copies + 1)) + '%');
+      presenceTrack.style.animationName = 'presenceScrollN';
+    }
+  }
+
   /* -------------------------------------------------- stat count-up */
 
   function formatCount(value, suffix) {
@@ -261,7 +290,7 @@
   var counters = document.querySelectorAll('[data-count]');
   var counterGroups = [];
   counters.forEach(function (el) {
-    var holder = el.closest('.presence-grid') || el;
+    var holder = el.closest('.presence-marquee') || el;
     for (var i = 0; i < counterGroups.length; i++) {
       if (counterGroups[i].holder === holder) { counterGroups[i].els.push(el); return; }
     }
