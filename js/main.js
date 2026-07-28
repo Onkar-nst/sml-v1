@@ -105,6 +105,19 @@
     var mapSvg = mapHolder.querySelector('.map-svg');
     var countries = Array.prototype.slice.call(mapSvg.querySelectorAll('.cty'));
 
+    // The asset ships with its own legend card baked in at the bottom of the
+    // viewBox (y > ~400). We render a compact HTML legend instead (.map-legend),
+    // so hide those elements — on-map pins and HQ triangles all sit higher up.
+    mapSvg.querySelectorAll('.xtra').forEach(function (el) {
+      try {
+        if (el.getBBox().y > 400) el.style.display = 'none';
+      } catch (e) { /* detached/zero-size shapes — leave them be */ }
+    });
+
+    // with that card gone the lower fifth of the viewBox is empty — crop to the
+    // land itself (countries measure y 7→400) so the map isn't floating in space
+    mapSvg.setAttribute('viewBox', '0 0 804 408');
+
     // Push each country out along the bearing from the map's centre through its
     // own centre, so the set scatters across all 360 degrees and converges back.
     // Measured once, lazily, to keep it off the critical path.
@@ -271,6 +284,32 @@
       });
     }, { threshold: 0.3 });
     counterGroups.forEach(function (g) { countObserver.observe(g.holder); });
+  }
+
+  /* ------------------------------------------- why cards: drag to scroll */
+
+  var whyScroller = document.getElementById('whyScroller');
+  if (whyScroller) {
+    var dragStartX = 0;
+    var dragStartScroll = 0;
+    var dragging = false;
+
+    whyScroller.addEventListener('mousedown', function (e) {
+      dragging = true;
+      dragStartX = e.pageX;
+      dragStartScroll = whyScroller.scrollLeft;
+      whyScroller.classList.add('dragging');
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', function (e) {
+      if (!dragging) return;
+      whyScroller.scrollLeft = dragStartScroll - (e.pageX - dragStartX);
+    });
+    window.addEventListener('mouseup', function () {
+      if (!dragging) return;
+      dragging = false;
+      whyScroller.classList.remove('dragging');
+    });
   }
 
   /* ----------------------------------------------------- product tabs */
