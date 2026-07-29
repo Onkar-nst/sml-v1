@@ -8,7 +8,7 @@
 <link rel="icon" href="assets/sml-logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;550;600;650;700;750&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -36,7 +36,7 @@
         <li><a href="#about">About Us</a></li>
         <li><a href="#business">Business</a></li>
         <li><a href="#solutions">Our Solutions</a></li>
-        <li><a href="#trust">Accreditation</a></li>
+        <!-- <li><a href="#trust">Accreditation</a></li> -->
         <li><a href="#contact">Contact</a></li>
       </ul>
       <a href="#solutions" class="btn nav-cta">Explore Products</a>
@@ -44,60 +44,44 @@
   </div>
 </header>
 
-<!-- ============ 1 · HERO + WHY SML (one shared backdrop image) ============ -->
-<div class="hero-zone" id="top">
+<!-- ============================ 1 · HERO ============================ -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <img src="https://sml-ltd.com/wp-content/uploads/2024/10/sml-banner2-1.jpg" alt="Young seedlings rising from dark soil">
+  </div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="eyebrow eyebrow--light">Transforming Agriculture Since 1971</span>
+      <h1>What we eat matters, then <em>how we grow</em> matters even more</h1>
+      <p class="hero-sub">
+        SML Limited is a research-driven leader in advanced agricultural solutions:
+        soil health, crop nutrition, crop protection and biologicals, grown from
+        five decades of science.
+      </p>
+      <div class="hero-actions">
+        <a href="#solutions" class="btn btn-cream">
+          Explore Products
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://sml-ltd.com/wp-content/uploads/2026/07/SML-Brochure-2026.pdf" target="_blank" rel="noopener" class="btn btn-ghost">Download Brochure</a>
+      </div>
+    </div>
+
+    <div class="hero-strip">
+      <div class="hero-fact"><b>1971</b><span>Founded in Mumbai</span></div>
+      <div class="hero-fact"><b>80+</b><span>Countries served</span></div>
+      <div class="hero-fact"><b>550+</b><span>Global patents</span></div>
+      <div class="hero-fact"><b>100,000 MT</b><span>WDG capacity</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================== WHY SML =========================== -->
+<div class="hero-zone">
   <div class="hero-zone-bg">
     <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2400&q=70" alt="Sunlit farm field">
   </div>
-
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <h1>What we eat matters, then <span class="grad-green">how we grow</span> matters even more</h1>
-        <p class="hero-tags">
-          <span>Soil Health</span><i></i>
-          <span>Crop Nutrition</span><i></i>
-          <span>Crop Protection</span><i></i>
-          <span>Biologicals</span><i></i>
-          <span>PGR</span>
-        </p>
-        <div class="hero-actions">
-          <a href="#solutions" class="pill pill-green">
-            Explore Products
-            <span class="pill-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </span>
-          </a>
-          <a href="https://sml-ltd.com/wp-content/uploads/2026/07/SML-Brochure-2026.pdf" target="_blank" rel="noopener" class="pill pill-navy">
-            Download Brochure
-            <span class="pill-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            </span>
-          </a>
-        </div>
-      </div>
-
-      <!-- decorative: a seedling that draws itself, loops forever -->
-      <div class="hero-visual" aria-hidden="true">
-        <svg class="grow" viewBox="0 0 400 400" role="presentation">
-          <circle class="grow-ring grow-ring--1" cx="200" cy="200" r="152"/>
-          <circle class="grow-ring grow-ring--2" cx="200" cy="200" r="116"/>
-
-          <path class="grow-soil" d="M112 320 h176"/>
-          <path class="grow-stem" d="M200 320 C200 272 200 226 200 148"/>
-
-          <path class="grow-leaf grow-leaf--l" d="M200 254 C158 254 136 230 134 200 C176 198 198 222 200 254 Z"/>
-          <path class="grow-leaf grow-leaf--r" d="M200 214 C242 214 264 190 266 160 C224 158 202 182 200 214 Z"/>
-          <circle class="grow-bud" cx="200" cy="148" r="10"/>
-
-          <circle class="grow-dot grow-dot--1" cx="92"  cy="146" r="5"/>
-          <circle class="grow-dot grow-dot--2" cx="312" cy="112" r="4"/>
-          <circle class="grow-dot grow-dot--3" cx="304" cy="278" r="6"/>
-          <circle class="grow-dot grow-dot--4" cx="104" cy="256" r="4"/>
-        </svg>
-      </div>
-    </div>
-  </section>
 
   <section class="why" id="why">
     <div class="wrap">
@@ -552,7 +536,8 @@
 </section>
 
 <!-- ============================ 9 · RECOGNITION ============================ -->
-<section id="trust">
+<!-- HIDDEN FOR NOW — remove hidden + style to restore -->
+<section id="trust" hidden style="display:none">
   <div class="wrap">
     <div class="section-head center" data-reveal>
       <span class="eyebrow">Recognition &amp; Accreditation</span>
@@ -697,8 +682,8 @@
         <ul>
           <li><a href="#about">Our Purpose &amp; Value</a></li>
           <li><a href="#business">Our Business</a></li>
-          <li><a href="#trust">What Sets SML Apart</a></li>
-          <li><a href="#trust">Our Achievement</a></li>
+          <!-- <li><a href="#trust">What Sets SML Apart</a></li> -->
+          <!-- <li><a href="#trust">Our Achievement</a></li> -->
           <li><a href="https://sml-ltd.com/career/" target="_blank" rel="noopener">Careers</a></li>
         </ul>
       </div>

@@ -281,21 +281,57 @@ have: **Divisions**, **Recognition & Accreditation**, and **FAQ**. They carry ap
 else. Say the word and they go.
 
 ### Run it
-No build step. Open `index.html` directly, or serve the folder:
+Next.js 16 (App Router) with React 19 and TypeScript.
 
 ```bash
-python3 -m http.server 8000    # then visit http://localhost:8000
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # both routes prerender as static HTML
+npm run lint
+npm run typecheck
 ```
 
 ### Files
 ```
-index.html          single-page homepage
-css/styles.css      all styling
-js/products.js      74-product catalogue (name, category, image, composition)
-js/worldmap.js      world map SVG for Global Footprint (247 paths, country-tagged)
-js/main.js          nav, hero slider, map assembly, reveals, counters, tabs, FAQ
-assets/sml-logo.svg brand logo
+app/
+  layout.tsx           html shell, self-hosted Inter + Fraunces, metadata
+  page.tsx             the homepage — section components in order
+  globals.css          tokens, reset, and the four shared primitives
+  products/page.tsx    /products — the full 74-SKU catalogue
+
+components/
+  layout/              Header · Footer · WhatsAppButton
+  sections/            Hero · WhySml · About · Presence · Solutions · Brand ·
+                       Mantra · Footprint · Divisions · Recognition · Faq ·
+                       Cta · Catalogue        (each with its own *.module.css)
+  ui/                  icons · ProductCard · ScrollReveal · CurrentYear
+
+hooks/
+  useScrollReveal      one IntersectionObserver for every [data-reveal]
+  useCountUp           a group of stats counting up on one shared clock
+  useMarqueeCopies     how many duplicate sets the presence rail needs
+  useDragScroll        click-and-drag on the Why SML rail
+  useWorldMap          fetches the map, then flies the countries into place
+
+data/
+  site.ts              nav, stats, divisions, FAQ, footer — all page copy
+  products.ts          74-product catalogue, typed
+
+lib/                   css custom-property helper, reduced-motion check
+public/                sml-logo.svg · world-map.svg
+legacy/                the original static build, kept for reference
 ```
+
+**Styling.** Design tokens and the four cross-cutting primitives (`.wrap`,
+`.eyebrow`, `.section-head`, `.btn`) stay global in `app/globals.css`; everything
+else is a CSS Module beside the component that owns it. Where a section needs to
+restyle a global primitive — the hero's cream buttons, the CTA card's white
+eyebrow — the module scopes it under its own root class, so the override wins on
+specificity rather than on file order.
+
+**Server vs client.** Every section is a Server Component except the four that
+hold state or measure the DOM: `Header` (mobile menu), `WhySml` (drag rail),
+`Presence` (marquee + counters), `Footprint` (map) and `Faq` (accordion).
 
 ### Global Footprint map
 Uses **SML's own map asset** (`map-mobile.svg` from their CDN), not a generic world map — so
@@ -308,10 +344,11 @@ theirs. Processing applied at build time:
   and the 3 `<polyline>` HQ triangles tagged `.xtra`
 - per-element `stroke` attributes moved into CSS
 
-It lives in `js/worldmap.js` rather than inline in `index.html` so the HTML stays editable,
-and as a script (not `fetch`) so it still works when opening `index.html` from `file://`.
+It lives at `public/world-map.svg` and is fetched on mount by `useWorldMap`, rather than
+bundled — 300 KB of path data belongs in a cacheable static asset, not in the JS payload or
+the RSC stream.
 
-**The assembly animation:** on scroll into view, `main.js` measures each country's bounding box,
+**The assembly animation:** on scroll into view, `useWorldMap` measures each country's bounding box,
 derives its bearing from the map centre, and pushes it out along that bearing — so the set
 scatters across all 360° and converges back into the map. Outermost land lands first. Total run
 is ~1.6 s (1.15 s flight + up to 0.42 s stagger), with the pins and legend fading on at 1.55 s.

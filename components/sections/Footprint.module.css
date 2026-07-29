@@ -1,0 +1,222 @@
+/* GLOBAL FOOTPRINT — the map assembles itself from 175 country paths
+
+   The SVG is fetched and injected at runtime, so its class names (.map-svg,
+   .cty, .on, .xtra) come from the asset itself and have to be addressed
+   globally. Scoping them under .holder keeps them from leaking anywhere else. */
+
+/* countries fly in from beyond the section, so this must not clip them —
+   body's overflow-x:hidden still prevents a horizontal scrollbar. the z-index
+   keeps in-flight countries above the neighbouring sections in both directions */
+.footprint { background: #fff; position: relative; z-index: 2; }
+
+.lede {
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  max-width: 780px;
+  margin-inline: auto;
+}
+
+/* holds the map, the cursor glow and the country chip in one coordinate space */
+.stage {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto 2.6rem;
+}
+
+.holder img { width: 100%; }
+
+.holder :global(.map-svg) {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;   /* countries start outside the viewBox */
+}
+
+/* Each country starts pushed out along its own bearing from the centre of the
+   map, so they converge from every direction. --tx/--ty/--rot/--dly are set
+   per-path by useWorldMap() from the path's own bounding box. */
+.holder :global(.map-svg .cty) {
+  fill: rgba(25, 49, 116, .1);
+  stroke: rgba(25, 49, 116, .3);
+  stroke-width: .25;
+  stroke-miterlimit: 10;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(.5);
+}
+.holder :global(.map-svg .cty.on) { fill: #43791f; }
+
+.holder :global(.map-svg .xtra) { opacity: 0; }
+
+/* the asset carries the old site's inline colors — remap to the two logo
+   colors. CSS wins over SVG presentation attributes. */
+.holder :global(.map-svg .xtra[fill="#3D5991"]),
+.holder :global(.map-svg .xtra[fill="#283D77"]),
+.holder :global(.map-svg .xtra[fill="#1A2C57"]),
+.holder :global(.map-svg .xtra[fill="#FFFF00"]) { fill: var(--navy); }   /* pins + HQ markers */
+.holder :global(.map-svg .xtra[fill="#FFFFFF"]) { fill: #fff; }
+
+/* transitions live only on the settled state, so the initial offset paints
+   instantly and nothing animates until the section scrolls into view */
+.holder :global(.map-svg.is-in .cty) {
+  opacity: 1;
+  transform: none;
+  transition:
+    transform .55s cubic-bezier(.16, .84, .32, 1) var(--dly, 0ms),
+    opacity .22s ease var(--dly, 0ms);
+}
+/* pins, legend and HQ markers settle on once the landmass has arrived */
+.holder :global(.map-svg.is-in .xtra) {
+  opacity: 1;
+  transition: opacity .32s ease .46s;
+}
+
+/* ---------- once assembled: hover, and a pulse on every plant ----------
+   `is-done` lands when the assembly is over (useWorldMap). Until then the
+   long arrival transition owns .cty, and a hover mid-flight would crawl. */
+
+.holder :global(.map-svg.is-done .cty) {
+  transition:
+    fill .16s ease,
+    stroke .16s ease,
+    stroke-width .16s ease,
+    transform .2s var(--ease);
+}
+.holder :global(.map-svg.is-done .cty:hover) {
+  fill: rgba(67, 121, 31, .28);
+  stroke: var(--green);
+  stroke-width: .55;
+  transform: scale(1.035);
+}
+/* the reach countries are already green, so they deepen and lift instead */
+.holder :global(.map-svg.is-done .cty.on:hover) {
+  fill: var(--green-dark);
+  stroke: var(--green-dark);
+  filter: drop-shadow(0 1px 3px rgba(67, 121, 31, .5));
+}
+
+/* rings dropped on each plant and headquarters by useWorldMap */
+.holder :global(.map-svg .ping) {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: .9;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  pointer-events: none;
+}
+.holder :global(.map-svg.is-done .ping) {
+  animation: ping 2.6s var(--ping-d, 0ms) cubic-bezier(.2, .6, .35, 1) infinite;
+}
+
+@keyframes ping {
+  0% { transform: scale(.3); opacity: 0; }
+  14% { opacity: .7; }
+  70%, 100% { transform: scale(3.4); opacity: 0; }
+}
+
+/* ---------- cursor effects ----------
+   Both ride a transform off --mx/--my rather than moving top/left, so a pointer
+   move stays on the compositor and never touches layout. */
+
+.glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    rgba(67, 121, 31, .22),
+    rgba(67, 121, 31, .07) 45%,
+    transparent 70%
+  );
+  transform: translate3d(var(--mx, -999px), var(--my, -999px), 0);
+  transition: opacity .35s ease;
+}
+.stage:hover .glow { opacity: 1; }
+
+/* the chip naming the country under the cursor */
+.tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(var(--mx, -999px), var(--my, -999px), 0);
+  transition: opacity .16s ease;
+  z-index: 3;
+}
+.stage[data-tip="on"] .tip { opacity: 1; }
+
+/* offset off the cursor itself, so the chip never sits under the pointer */
+.tip b {
+  position: absolute;
+  left: 16px;
+  bottom: 2px;
+  display: block;
+  padding: .34rem .62rem;
+  border-radius: 7px;
+  background: var(--navy);
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+.stage[data-reach="yes"] .tip b { background: var(--green); }
+
+.tip i {
+  display: block;
+  font-style: normal;
+  font-size: .6rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  opacity: .82;
+}
+/* countries outside the reach carry no note, so the chip is one line */
+.tip i:empty { display: none; }
+
+/* compact chart-style legend — one line, small, side by side.
+   The SVG's own stacked legend card is hidden by useWorldMap(). */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem 2rem;
+  margin: -0.8rem auto 2.2rem;
+}
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .85rem;
+  font-weight: 550;
+  color: var(--ink);
+}
+.key svg { color: var(--navy); flex: 0 0 auto; }
+
+.swatch { width: 11px; height: 11px; flex: 0 0 auto; display: inline-block; }
+.swatchReach { background: var(--green); border-radius: 2px; }
+.swatchHq {
+  width: 0; height: 0;
+  border-left: 6.5px solid transparent;
+  border-right: 6.5px solid transparent;
+  border-bottom: 11px solid var(--navy);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holder :global(.map-svg .cty),
+  .holder :global(.map-svg .xtra) { opacity: 1; transform: none; transition: none; }
+  /* the hover recolor stays — it is the motion that goes */
+  .holder :global(.map-svg.is-done .cty:hover) { transform: none; }
+  .holder :global(.map-svg .ping) { display: none; }
+  .glow { display: none; }
+}

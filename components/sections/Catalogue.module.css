@@ -1,0 +1,40 @@
+/* CATALOGUE — the full 74-product grid with category tabs */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  justify-content: center;
+  margin-bottom: 2.4rem;
+}
+.tab {
+  padding: .58rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--body-c);
+  font-family: var(--sans);
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .25s var(--ease);
+}
+.tab span {
+  display: inline-block;
+  margin-left: .4rem;
+  font-size: .74rem;
+  opacity: .55;
+}
+.tab:hover { border-color: var(--green); color: var(--green); }
+.tab.active { background: var(--green); border-color: var(--green); color: #fff; }
+.tab.active span { opacity: .8; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(216px, 1fr));
+  gap: 1.1rem;
+}
+
+@media (max-width: 560px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .8rem; }
+}

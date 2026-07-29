@@ -1,0 +1,191 @@
+/* ==========================================================================
+   SML Limited — global layer
+
+   Only what genuinely crosses section boundaries lives here: design tokens,
+   the reset, typography, and the four primitives every section reuses
+   (.wrap, .eyebrow, .section-head, .btn) plus the scroll-reveal system.
+   Everything else is scoped to its section in a *.module.css beside the
+   component that owns it.
+   ========================================================================== */
+
+:root {
+  --green: #43791f;
+  --green-dark: #365f1a;
+  --navy: #193174;
+  --navy-dark: #122559;
+
+  /* tints of the logo colors, never a third hue */
+  --ink: #193174;
+  --body-c: rgba(25, 49, 116, .78);
+  --muted: rgba(25, 49, 116, .55);
+  --line: rgba(25, 49, 116, .14);
+  --line-soft: rgba(25, 49, 116, .09);
+  --green-tint: rgba(67, 121, 31, .08);
+  --navy-tint: rgba(25, 49, 116, .05);
+
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 2px 10px rgba(25, 49, 116, .07);
+  --shadow: 0 12px 32px rgba(25, 49, 116, .12);
+
+  --sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  --nav-h: 76px;
+  --topbar-h: 38px;
+  --max: 1240px;
+  --ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+* { box-sizing: border-box; }
+
+/* anchors must clear the always-on header (region bar + navbar) */
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + var(--topbar-h) + 12px); }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--body-c);
+  background: #fff;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  margin: 0 0 .5em;
+}
+
+h1 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
+h2 { font-size: clamp(1.7rem, 3vw, 2.5rem); }
+h3 { font-size: 1.2rem; }
+
+h1 em, h2 em { font-style: normal; color: var(--green); }
+
+p { margin: 0 0 1.1em; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+.wrap { width: min(100% - 2.6rem, var(--max)); margin-inline: auto; }
+
+section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
+
+/* ---------- shared bits ---------- */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 1rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 20px; height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+}
+/* most sections sit on white, so the "light" variant stays green; the dark
+   panels flip it to white from their own module */
+.eyebrow--light { color: var(--green); }
+
+/* rounded chip eyebrow, as on the reference layout */
+.eyebrow--chip {
+  border: 1px solid rgba(67, 121, 31, .3);
+  background: var(--green-tint);
+  border-radius: 999px;
+  padding: .35rem .9rem;
+  margin-bottom: .9rem;
+}
+.eyebrow--chip::before { display: none; }
+
+.section-head { max-width: 680px; margin-bottom: 2.8rem; }
+.section-head.center { margin-inline: auto; text-align: center; }
+.section-head.center .eyebrow { justify-content: center; }
+.section-head p { font-size: 1.05rem; color: var(--body-c); margin: 0; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .9rem 1.7rem;
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: .95rem;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease),
+              background .2s ease, color .2s ease, border-color .2s ease;
+  white-space: nowrap;
+}
+.btn svg { transition: transform .25s var(--ease); }
+.btn:hover svg { transform: translateX(3px); }
+
+.btn-primary { background: var(--green); color: #fff; }
+.btn-primary:hover { transform: translateY(-2px); background: var(--green-dark); box-shadow: var(--shadow); }
+
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-navy:hover { transform: translateY(-2px); background: var(--navy-dark); box-shadow: var(--shadow); }
+
+.btn-outline { border-color: var(--line); color: var(--navy); background: #fff; }
+.btn-outline:hover { border-color: var(--navy); transform: translateY(-2px); }
+
+.btn-ghost { border-color: rgba(255, 255, 255, .55); color: #fff; }
+.btn-ghost:hover { background: #fff; color: var(--navy); border-color: #fff; transform: translateY(-2px); }
+
+/* solid white button, for use on the dark navy panels */
+.btn-cream { background: #fff; color: var(--navy); }
+.btn-cream:hover { transform: translateY(-2px); color: var(--green); box-shadow: var(--shadow); }
+
+/* ---------- scroll reveal sequence ----------
+   Driven by useScrollReveal(), which observes every [data-reveal] on the page
+   and sets [data-in] once it scrolls into view. A data attribute rather than a
+   class: React rewrites className wholesale on re-render, which would strip an
+   observer-added class, but it never touches attributes it didn't render. */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal][data-in] { opacity: 1; transform: none; }
+
+/* directional variants */
+[data-reveal="left"]  { transform: translateX(-40px); }
+[data-reveal="right"] { transform: translateX(40px); }
+
+/* stagger: the parent stays put, its direct children cascade in */
+[data-reveal="stagger"] { opacity: 1; transform: none; }
+[data-reveal="stagger"] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+[data-reveal="stagger"][data-in] > * { opacity: 1; transform: none; }
+[data-reveal="stagger"][data-in] > *:nth-child(1) { transition-delay: calc(var(--d, 0ms) + 70ms); }
+[data-reveal="stagger"][data-in] > *:nth-child(2) { transition-delay: calc(var(--d, 0ms) + 190ms); }
+[data-reveal="stagger"][data-in] > *:nth-child(3) { transition-delay: calc(var(--d, 0ms) + 310ms); }
+[data-reveal="stagger"][data-in] > *:nth-child(4) { transition-delay: calc(var(--d, 0ms) + 430ms); }
+[data-reveal="stagger"][data-in] > *:nth-child(5) { transition-delay: calc(var(--d, 0ms) + 550ms); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal],
+  [data-reveal="stagger"] > * { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+@media (max-width: 560px) {
+  .wrap { width: min(100% - 2rem, var(--max)); }
+}

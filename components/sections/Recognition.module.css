@@ -1,0 +1,62 @@
+/* RECOGNITION — award list beside a navy accreditation card */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.awards { list-style: none; padding: 0; margin: 0; }
+.award {
+  display: flex;
+  align-items: baseline;
+  gap: 1.3rem;
+  padding: 1.05rem .3rem;
+  border-bottom: 1px solid var(--line-soft);
+  transition: transform .25s var(--ease);
+}
+.award:first-child { border-top: 1px solid var(--line-soft); }
+.award:hover { transform: translateX(5px); }
+.year {
+  flex: 0 0 3.2rem;
+  font-weight: 750;
+  font-size: 1.05rem;
+  color: var(--green);
+}
+.award b { display: block; font-size: .96rem; color: var(--ink); font-weight: 650; }
+.award span { font-size: .82rem; color: var(--muted); }
+
+.certCard {
+  background: var(--navy);
+  color: rgba(255, 255, 255, .85);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 2rem;
+}
+.certCard h3 { color: #fff; font-size: 1.3rem; }
+.certCard > p { color: rgba(255, 255, 255, .7); font-size: .93rem; }
+.certCard :global(.eyebrow--light) { color: #fff; }
+
+.certList { list-style: none; padding: 0; margin: 1.4rem 0 0; display: grid; gap: .85rem; }
+.certList li {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  font-size: .9rem;
+  padding-bottom: .85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+.certList li:last-child { border-bottom: 0; padding-bottom: 0; }
+.certList svg {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  color: #fff;
+  background: var(--green);
+  border-radius: 50%;
+  padding: 3px;
+}
+.certList b { color: #fff; }
+
+@media (max-width: 980px) {
+  .grid { grid-template-columns: 1fr; }
+}

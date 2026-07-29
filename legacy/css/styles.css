@@ -34,7 +34,8 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+/* anchors must clear the always-on header (region bar + navbar) */
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + var(--topbar-h) + 12px); }
 
 body {
   margin: 0;
@@ -172,24 +173,23 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
    NAV — plain white header
    ========================================================================== */
 
+/* the whole header — region bar + navbar — is locked in place and never
+   changes height, shrinks, or hides, at any scroll position */
 .nav {
   position: fixed;
   inset: 0 0 auto;
   z-index: 100;
   background: #fff;
-  box-shadow: 0 1px 0 var(--line-soft);
-  transition: box-shadow .3s ease;
+  box-shadow: 0 1px 0 var(--line-soft), 0 6px 22px rgba(25, 49, 116, .08);
 }
-.nav.scrolled { box-shadow: 0 1px 0 var(--line-soft), 0 6px 22px rgba(25, 49, 116, .08); }
 
-/* slim navy region bar — collapses away on scroll */
+/* slim navy region bar — always visible */
 .topbar {
   height: var(--topbar-h);
   overflow: hidden;
   background: var(--navy);
   color: rgba(255, 255, 255, .75);
   font-size: .78rem;
-  transition: height .3s var(--ease), opacity .25s ease;
 }
 .topbar .wrap { display: flex; align-items: center; height: var(--topbar-h); gap: 1.4rem; }
 .topbar-region { display: flex; gap: 1rem; }
@@ -204,14 +204,11 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   font-weight: 550;
 }
 .topbar-cta:hover { color: #fff; }
-.nav.scrolled .topbar { height: 0; opacity: 0; }
 
-.navbar { height: var(--nav-h); display: flex; align-items: center; transition: height .3s ease; }
-.nav.scrolled .navbar { height: 66px; }
+.navbar { height: var(--nav-h); display: flex; align-items: center; }
 .navbar .wrap { display: flex; align-items: center; gap: 2rem; }
 
-.nav-logo img { height: 40px; width: auto; transition: height .3s ease; }
-.nav.scrolled .nav-logo img { height: 34px; }
+.nav-logo img { height: 40px; width: auto; }
 
 .nav-links {
   display: flex;
@@ -282,183 +279,123 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   background: linear-gradient(180deg, rgba(255, 255, 255, .88), rgba(255, 255, 255, .66) 50%, rgba(255, 255, 255, .92));
 }
 
-.hero-zone .hero,
 .hero-zone .why { position: relative; z-index: 1; }
 
-.hero {
-  padding: calc(var(--nav-h) + var(--topbar-h) + clamp(2.2rem, 5vw, 3.6rem)) 0 clamp(2.5rem, 5vw, 4rem);
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.02fr .98fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-}
-
-.hero h1 { margin-bottom: 1.1rem; }
-
-/* highlighted phrase — flat logo green, no gradient */
+/* flat logo green for the highlighted phrase in the Why SML headline */
 .grad-green { color: var(--green); }
 
-/* dot-separated capability tags under the headline */
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .5rem .8rem;
-  font-size: .95rem;
-  font-weight: 550;
-  color: var(--body-c);
-  margin: 0 0 2rem;
-}
-.hero-tags i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+/* ==========================================================================
+   HERO — one composed editorial frame
 
-.hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
+   The original dark banner hero, restored. It carries its own palette and
+   serif display face as locally-scoped variables so the botanical theme stops
+   at the hero's edge and the rest of the page keeps the flat navy/green system.
+   ========================================================================== */
 
-/* pill CTA with a circular arrow chip */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: .8rem;
-  border-radius: 999px;
-  padding: .45rem .45rem .45rem 1.4rem;
-  font-weight: 600;
-  font-size: .93rem;
-  color: #fff;
-  white-space: nowrap;
-  transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .2s ease;
-}
-.pill-green { background: var(--green); box-shadow: 0 8px 22px rgba(67, 121, 31, .3); }
-.pill-green:hover { background: var(--green-dark); }
-.pill-navy { background: var(--navy); box-shadow: 0 8px 22px rgba(25, 49, 116, .28); }
-.pill-navy:hover { background: var(--navy-dark); }
-.pill:hover { transform: translateY(-2px); }
-.pill-arrow {
-  width: 34px; height: 34px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .22);
-  display: grid;
-  place-items: center;
-  transition: transform .25s var(--ease);
-}
-.pill:hover .pill-arrow { transform: translateX(3px); }
+.hero {
+  --cream: #f4f0e5;
+  --forest: #1f3d2c;
+  --forest-deep: #162c20;
+  --leaf: #b5cf9a;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
 
-/* right column — a seedling that draws itself on a ~7s loop */
-.hero-visual {
   position: relative;
+  min-height: 100svh;
   display: flex;
-  justify-content: center;
-  animation: riseIn .9s var(--ease) both .45s;
-}
-.hero-blob { display: none; }
-
-.grow { width: 100%; max-width: 460px; height: auto; overflow: visible; }
-
-/* every timed piece shares one 7s clock so the scene stays in step */
-.grow-ring,
-.grow-stem,
-.grow-leaf,
-.grow-bud,
-.grow-dot {
-  transform-box: fill-box;
-  animation-duration: 7s;
-  animation-iteration-count: infinite;
-  animation-timing-function: var(--ease);
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--forest-deep);
+  padding: calc(var(--nav-h) + var(--topbar-h) + 3rem) 0 0;
 }
 
-.grow-ring {
-  fill: none;
-  stroke: var(--navy);
-  stroke-width: 1.5;
-  stroke-dasharray: 3 13;
-  opacity: .3;
-  transform-origin: center;
-  animation-name: growSpin;
-  animation-timing-function: linear;
+.hero-bg { position: absolute; inset: 0; z-index: -2; }
+.hero-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  animation: heroDrift 16s var(--ease) both;
 }
-.grow-ring--1 { animation-duration: 34s; }
-.grow-ring--2 { animation-duration: 26s; animation-direction: reverse; opacity: .18; }
+@keyframes heroDrift { from { transform: scale(1.08); } to { transform: scale(1); } }
 
-.grow-soil {
-  stroke: var(--green);
-  stroke-width: 5;
-  stroke-linecap: round;
-  opacity: .3;
+/* deep forest duotone wash, heavier at the base for the text */
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(15, 32, 22, .96) 4%, rgba(22, 44, 32, .62) 45%, rgba(22, 44, 32, .3) 100%),
+    linear-gradient(100deg, rgba(15, 32, 22, .55), transparent 65%);
 }
 
-.grow-stem {
-  fill: none;
-  stroke: var(--green);
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-dasharray: 190;
-  stroke-dashoffset: 190;
-  animation-name: growStem;
+.hero .wrap { position: relative; z-index: 2; }
+
+.hero-inner { max-width: 880px; padding-bottom: clamp(3rem, 6vw, 5rem); }
+
+/* serif display type, only inside the hero */
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 560;
+  font-size: clamp(2.7rem, 5.6vw, 4.7rem);
+  line-height: 1.08;
+  letter-spacing: -.015em;
+  color: var(--cream);
+  margin-bottom: 1.1rem;
+}
+.hero h1 em { font-style: italic; font-weight: 480; color: var(--leaf); }
+
+/* the hero's eyebrow is the original hairline rule, not the current 2px bar */
+.hero .eyebrow { gap: .6rem; font-weight: 650; letter-spacing: .22em; margin-bottom: 1.2rem; }
+.hero .eyebrow::before { width: 22px; height: 1px; border-radius: 0; opacity: .7; }
+.hero .eyebrow--light { color: var(--leaf); }
+
+/* pill buttons in the hero's own colours */
+.hero .btn { padding: .95rem 1.85rem; border-radius: 999px; }
+.hero .btn-cream { background: var(--cream); color: var(--forest); }
+.hero .btn-cream:hover { transform: translateY(-2px); background: #fff; color: var(--forest); box-shadow: 0 14px 30px rgba(0, 0, 0, .25); }
+.hero .btn-ghost { border-color: rgba(244, 240, 229, .45); color: var(--cream); }
+.hero .btn-ghost:hover { background: var(--cream); color: var(--forest); border-color: var(--cream); transform: translateY(-2px); }
+
+.hero-sub {
+  font-size: clamp(1rem, 1.5vw, 1.14rem);
+  color: rgba(244, 240, 229, .8);
+  max-width: 560px;
+  margin-bottom: 2rem;
 }
 
-.grow-leaf { fill: var(--green); }
-.grow-leaf--l { transform-origin: 100% 100%; animation-name: growLeafL; }
-.grow-leaf--r { transform-origin: 0% 100%; animation-name: growLeafR; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .85rem; }
 
-.grow-bud { fill: var(--navy); transform-origin: center; animation-name: growBud; }
-
-.grow-dot { transform-origin: center; animation-name: growFloat; }
-.grow-dot--1 { fill: var(--green); opacity: .5; animation-delay: 0s; }
-.grow-dot--2 { fill: var(--navy); opacity: .35; animation-delay: -2.2s; }
-.grow-dot--3 { fill: var(--green); opacity: .35; animation-delay: -4s; }
-.grow-dot--4 { fill: var(--navy); opacity: .28; animation-delay: -5.4s; }
-
-/* the stem is fully undrawn when the loop restarts, so the reset is invisible */
-@keyframes growStem {
-  0%        { stroke-dashoffset: 190; opacity: 1; }
-  40%       { stroke-dashoffset: 0;   opacity: 1; }
-  88%       { stroke-dashoffset: 0;   opacity: 1; }
-  100%      { stroke-dashoffset: 0;   opacity: 0; }
+/* editorial fact strip along the base of the hero */
+.hero-strip {
+  margin-top: clamp(2.6rem, 5vw, 4rem);
+  border-top: 1px solid rgba(244, 240, 229, .22);
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: start;
+  column-gap: clamp(1.6rem, 4vw, 4rem);
+  row-gap: 1rem;
+  padding: 1.5rem 0 2.2rem;
 }
-@keyframes growLeafL {
-  0%, 26%   { transform: scale(0); opacity: 0; }
-  48%       { transform: scale(1); opacity: 1; }
-  88%       { transform: scale(1); opacity: 1; }
-  100%      { transform: scale(1); opacity: 0; }
+.hero-fact b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 540;
+  font-size: clamp(1.4rem, 2.3vw, 1.9rem);
+  color: var(--cream);
+  line-height: 1.1;
 }
-@keyframes growLeafR {
-  0%, 40%   { transform: scale(0); opacity: 0; }
-  62%       { transform: scale(1); opacity: 1; }
-  88%       { transform: scale(1); opacity: 1; }
-  100%      { transform: scale(1); opacity: 0; }
-}
-@keyframes growBud {
-  0%, 56%   { transform: scale(0); opacity: 0; }
-  74%       { transform: scale(1); opacity: 1; }
-  88%       { transform: scale(1); opacity: 1; }
-  100%      { transform: scale(1); opacity: 0; }
-}
-@keyframes growSpin {
-  to { transform: rotate(360deg); }
-}
-@keyframes growFloat {
-  0%, 100%  { transform: translateY(0); }
-  50%       { transform: translateY(-16px); }
+.hero-fact span {
+  font-size: .78rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244, 240, 229, .55);
 }
 
-/* holding the finished plant on screen beats flickering through the loop */
-@media (prefers-reduced-motion: reduce) {
-  .grow-ring, .grow-stem, .grow-leaf, .grow-bud, .grow-dot {
-    animation: none !important;
-    opacity: 1;
-    transform: none;
-    stroke-dashoffset: 0;
-  }
-  .grow-ring--1 { opacity: .3; }
-  .grow-ring--2 { opacity: .18; }
-}
-
-.hero h1 { animation: riseIn .7s var(--ease) both .1s; }
-.hero .hero-tags { animation: riseIn .7s var(--ease) both .22s; }
-.hero .hero-actions { animation: riseIn .7s var(--ease) both .34s; }
-@keyframes riseIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+.hero .eyebrow--light { animation: riseIn .8s var(--ease) both .1s; }
+.hero h1 { animation: riseIn .9s var(--ease) both .2s; }
+.hero .hero-sub { animation: riseIn .9s var(--ease) both .32s; }
+.hero .hero-actions { animation: riseIn .9s var(--ease) both .44s; }
+.hero .hero-strip { animation: riseIn 1s var(--ease) both .6s; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
 
 /* ---------- WHY SML — draggable card rail on the same backdrop ---------- */
 
@@ -1264,9 +1201,7 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 @media (max-width: 980px) {
   .about-grid, .brand-panel, .mantra-grid, .trust-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-  .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  /* the product shot stays full-bleed on one column rather than shrinking */
-  .hero-card { width: 100%; }
+  .hero-strip { grid-template-columns: repeat(2, auto); }
   .why-card { width: clamp(220px, 40vw, 260px); }
   .div-grid { grid-template-columns: repeat(2, 1fr); }
   .brand-media { max-width: 380px; }
@@ -1287,7 +1222,6 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
     transition: transform .4s var(--ease);
     margin-left: 0;
   }
-  .nav.scrolled .nav-links { inset: 66px 0 auto; }
   .nav-links.open { transform: none; }
   .nav-links a { display: block; padding: .85rem 0; border-bottom: 1px solid var(--line-soft); }
   .nav-links li:last-child a { border-bottom: 0; }
@@ -1305,7 +1239,8 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
   .featured-head { flex-direction: column; gap: .2rem; }
   .presence { width: 200px; padding: 1.4rem 1.1rem 1.3rem; }
   .footer-grid { grid-template-columns: 1fr; }
-  .hero-actions .pill { flex: 1 1 100%; justify-content: space-between; }
+  .hero-actions .btn { flex: 1 1 100%; }
+  .hero-strip { grid-template-columns: 1fr 1fr; }
   .why-card { width: min(78vw, 265px); }
   .footer-bottom { justify-content: center; text-align: center; }
 }

@@ -8,29 +8,20 @@
 
   /* ---------------------------------------------------------------- nav */
 
-  var nav = document.getElementById('nav');
+  // the header is fixed and never reacts to scroll — only the mobile menu
+  // opens and closes here
   var navToggle = document.getElementById('navToggle');
   var navLinks = document.getElementById('navLinks');
-
-  function onScroll() {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  }
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
 
   navToggle.addEventListener('click', function () {
     var open = navLinks.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', String(open));
-    // the open panel is white, so force the dark nav treatment behind it
-    if (open) nav.classList.add('scrolled');
-    else onScroll();
   });
 
   navLinks.addEventListener('click', function (e) {
     if (e.target.closest('a')) {
       navLinks.classList.remove('open');
       navToggle.setAttribute('aria-expanded', 'false');
-      onScroll();
     }
   });
 
