@@ -7,6 +7,7 @@
 
 export type ProductCategory =
   | 'insecticide'
+  | 'other-insecticide'
   | 'fungicide'
   | 'herbicide'
   | 'fertiliser'
@@ -543,5 +544,95 @@ export const PRODUCTS: Product[] = [
     catLabel: "PGR",
     img: "https://sml-ltd.com/wp-content/uploads/2024/02/gibbrASUL-2-300x300.jpg",
     note: "Gibberellic acid based"
+  },
+  {
+    name: "Sampat",
+    cat: "other-insecticide",
+    catLabel: "Other Insecticide",
+    img: "https://sml-ltd.com/wp-content/uploads/2025/10/sampat-300x300.jpg",
+    note: ""
+  },
+  {
+    name: "Monosul+",
+    cat: "other-insecticide",
+    catLabel: "Other Insecticide",
+    img: "https://sml-ltd.com/wp-content/uploads/2025/10/monosul-plus-300x300.jpg",
+    note: "Monocrotophos 15% SG"
   }
 ]
+
+/* ------------------------------------------------------------- taxonomy */
+
+/**
+ * The five families the range is organised by, mirroring the solutions menu.
+ * A family holds one or more sub-ranges; `cat` is the catalogue category the
+ * sub-range draws from, or null when the range has no SKUs in PRODUCTS yet.
+ */
+export interface ProductSub {
+  id: string
+  label: string
+  cat: ProductCategory | null
+}
+
+export interface ProductFamily {
+  id: string
+  label: string
+  subs: ProductSub[]
+}
+
+export const PRODUCT_FAMILIES: ProductFamily[] = [
+  {
+    id: 'crop-nutrition',
+    label: 'Crop Nutrition',
+    subs: [{ id: 'fertiliser', label: 'Fertiliser', cat: 'fertiliser' }],
+  },
+  {
+    id: 'crop-protection',
+    label: 'Crop Protection',
+    subs: [
+      { id: 'insecticide', label: 'Insecticide', cat: 'insecticide' },
+      { id: 'fungicide', label: 'Fungicide', cat: 'fungicide' },
+      { id: 'herbicide', label: 'Herbicide', cat: 'herbicide' },
+    ],
+  },
+  {
+    id: 'other-insecticides',
+    label: 'Other Insecticides',
+    subs: [
+      { id: 'other-insecticide', label: 'Our Other Insecticides', cat: 'other-insecticide' },
+    ],
+  },
+  {
+    id: 'pgr',
+    label: 'PGR',
+    subs: [{ id: 'pgr', label: 'PGR', cat: 'pgr' }],
+  },
+  {
+    id: 'biologicals',
+    label: 'Biologicals',
+    subs: [{ id: 'biological', label: 'Biologicals', cat: 'biological' }],
+  },
+]
+
+export const productsIn = (cat: ProductCategory | null): Product[] =>
+  cat ? PRODUCTS.filter((p) => p.cat === cat) : []
+
+export const familyCount = (family: ProductFamily): number =>
+  family.subs.reduce((total, sub) => total + productsIn(sub.cat).length, 0)
+
+/**
+ * The URL segment for a product page.
+ *
+ * Several SKUs carry a "+" in the name (Emerald Z+, Metrite ++). A literal "+"
+ * does not survive the round trip through a path segment — it comes back as a
+ * space and the lookup misses — so it is spelled out. Every link to a product
+ * and the route's own `generateStaticParams` must go through this one function,
+ * or the two disagree and the page 404s.
+ */
+export const productSlug = (name: string): string =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/\+/g, ' plus ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')

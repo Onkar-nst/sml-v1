@@ -1,4 +1,5 @@
 import { ArrowRight } from '@/components/ui/icons'
+import { productSlug } from '@/data/products'
 
 export interface ProductCardProps {
   name: string
@@ -20,7 +21,7 @@ export default function ProductCard({
   showLink = false,
   delay = 0,
 }: ProductCardProps) {
-  const slug = name.toLowerCase().replace(/\s+/g, '-')
+  const slug = productSlug(name)
 
   return (
     <a 
@@ -31,13 +32,15 @@ export default function ProductCard({
       <article
         className="flex flex-col bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-[#43791f]/15 hover:-translate-y-1.5 transition-all duration-300 h-full"
       >
-        <div className="relative bg-slate-50/60 w-full aspect-square flex items-center justify-center p-6 overflow-hidden border-b border-slate-100">
+        <div className="relative bg-slate-50/60 w-full aspect-square flex items-center justify-center p-2 overflow-hidden border-b border-slate-100">
           {img ? (
-            <img 
-              src={img} 
-              alt={name} 
-              loading="lazy" 
-              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-350 ease-out" 
+            /* fills the frame rather than sitting at its natural size, so the
+               pack shot reads at a glance; object-contain keeps it undistorted */
+            <img
+              src={img}
+              alt={name}
+              loading="lazy"
+              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-350 ease-out"
             />
           ) : (
             <span className="text-slate-300 text-xs">No Image</span>

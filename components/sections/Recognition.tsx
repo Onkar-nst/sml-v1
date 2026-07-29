@@ -12,7 +12,7 @@ export default function Recognition() {
     <section id="trust" className="py-14 md:py-20 lg:py-24 bg-white">
       <div className="wrap">
         <div className="max-w-[680px] mb-11 mx-auto text-center" data-reveal>
-          <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 before:content-[''] before:w-5 before:h-[2px] before:bg-current before:rounded-sm">
+          <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current">
             Recognition &amp; Accreditation
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-[#193174] leading-[1.15] tracking-tight mb-2" data-reveal="blur">

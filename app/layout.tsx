@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Fraunces, Inter } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
@@ -8,21 +8,15 @@ import ScrollReveal from '@/components/ui/ScrollReveal'
 
 import './globals.css'
 
-/* Self-hosted at build time, so the page no longer waits on a request to
-   fonts.googleapis.com before it can paint text. */
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
-
-/* The hero's display face. Loaded italic as well — the highlighted phrase in
-   the headline is set in it. */
-const fraunces = Fraunces({
+/* The one face the site is set in, matching the brand's own typography.
+   Self-hosted at build time, so the page no longer waits on a request to
+   fonts.googleapis.com before it can paint text. Italic comes along for the
+   highlighted phrase in the hero headline. */
+const montserrat = Montserrat({
   subsets: ['latin'],
   style: ['normal', 'italic'],
   display: 'swap',
-  variable: '--font-fraunces',
+  variable: '--font-montserrat',
 })
 
 export const metadata: Metadata = {
@@ -37,7 +31,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="en" className={montserrat.variable}>
       <body>
         <Header />
         <main className="pb-[60px] md:pb-0">{children}</main>

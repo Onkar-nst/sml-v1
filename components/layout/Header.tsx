@@ -114,20 +114,15 @@ export default function Header() {
             <span className="text-[9px] font-semibold uppercase tracking-wide leading-none">Products</span>
           </a>
 
-          {/* Centre — WhatsApp */}
+          {/* Centre — logo mark, jumps to the world footprint map */}
           <div className="flex items-center justify-center">
             <a
-              href="https://wa.me/918814999939?text=Hello%20SML%20Team%2C%20I%20am%20interested%20in%20your%20agricultural%20products.%20Please%20get%20in%20touch."
-              target="_blank"
-              rel="noopener"
-              aria-label="Chat on WhatsApp"
-              className="flex items-center justify-center w-13 h-13 rounded-full bg-[#25D366] shadow-[0_4px_14px_rgba(37,211,102,0.45)] active:scale-90 transition-transform -translate-y-3"
+              href="#footprint"
+              aria-label="Global footprint"
+              className="flex items-center justify-center rounded-full bg-white border border-slate-200 shadow-[0_4px_14px_rgba(25,49,116,0.18)] active:scale-90 transition-transform -translate-y-3"
               style={{ width: '52px', height: '52px' }}
             >
-              {/* WhatsApp SVG icon */}
-              <svg width="26" height="26" viewBox="0 0 32 32" fill="white">
-                <path d="M16.002 2.667C8.638 2.667 2.667 8.637 2.667 16c0 2.358.638 4.663 1.847 6.676L2.667 29.333l6.844-1.793A13.277 13.277 0 0 0 16.002 29.333C23.365 29.333 29.333 23.363 29.333 16S23.365 2.667 16.002 2.667zm0 2.4c5.93 0 10.933 4.932 10.933 10.933 0 6.002-4.933 10.933-10.933 10.933a10.9 10.9 0 0 1-5.573-1.525l-.39-.234-4.058 1.064 1.083-3.944-.254-.405A10.9 10.9 0 0 1 5.07 16c0-6.002 4.932-10.933 10.933-10.933zm-3.08 5.04c-.202 0-.53.076-.808.379-.277.303-1.06 1.036-1.06 2.526 0 1.49 1.085 2.932 1.236 3.135.152.202 2.122 3.24 5.16 4.416.721.278 1.283.444 1.721.57.723.205 1.382.176 1.902.107.58-.077 1.787-.73 2.04-1.435.253-.705.253-1.31.177-1.436-.076-.126-.278-.202-.58-.354-.303-.151-1.79-.883-2.068-.984-.278-.1-.48-.151-.682.152-.202.303-.783.984-.96 1.186-.176.202-.353.227-.655.076-.303-.152-1.278-.471-2.436-1.503-.9-.804-1.508-1.796-1.685-2.099-.177-.303-.019-.466.132-.617.136-.135.303-.354.455-.53.151-.177.202-.303.303-.505.1-.202.05-.379-.025-.53-.077-.152-.682-1.644-.934-2.251-.245-.59-.496-.51-.682-.52l-.58-.01z"/>
-              </svg>
+              <img src="/mobile-logo.png" alt="SML Limited" className="w-[30px] h-[30px] object-contain" />
             </a>
           </div>
 

@@ -12,7 +12,7 @@ export default function Gallery() {
       <div className="wrap">
         <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-[1.2rem] mb-7 md:mb-[3.5vw] lg:mb-10" data-reveal="stagger">
           <div>
-            <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 bg-green-50/60 px-3 py-1 rounded-full border border-green-100/50">
+            <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current">
               Our Gallery
             </span>
             <h2 className="m-0 text-3xl md:text-4xl lg:text-[2.5rem] font-bold text-[#193174] leading-[1.2] tracking-tight" data-reveal="blur">

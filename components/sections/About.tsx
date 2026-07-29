@@ -24,7 +24,7 @@ export default function About() {
             <h2 className="text-[1.75rem] md:text-[2.8vw] lg:text-[2.35rem] leading-[1.14] tracking-tight mb-[0.9em]" data-reveal="blur">
               Rooted in the soil, driven by research
             </h2>
-            <p className="text-[0.97rem] leading-[1.8] max-w-[29rem] text-[#193174]/55">
+            <p className="text-[0.97rem] leading-[1.8] max-w-[32rem] text-[#193174]/55">
               SML Limited, formerly Sulphur Mills Limited, is a global leader in advanced
               agricultural solutions, bringing science and passion together across soil
               health, nutrition, biologicals and crop protection.

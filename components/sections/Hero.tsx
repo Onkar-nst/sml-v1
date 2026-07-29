@@ -12,13 +12,13 @@ export default function Hero() {
       <section className="min-h-[100svh] flex items-end pt-[calc(114px+3rem)] pb-0">
         <div className="wrap">
           <div className="max-w-[880px] pb-12 md:pb-[6vw] lg:pb-20">
-            <span className="inline-flex items-center gap-[0.6rem] text-[0.72rem] font-[650] tracking-[0.22em] uppercase text-[#b5cf9a] mb-[1.2rem] before:content-[''] before:w-[22px] before:h-[1px] before:bg-current before:rounded-none before:opacity-70 animate-rise-in-eyebrow">
+            <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#b5cf9a] mb-[1.2rem] px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current animate-rise-in-eyebrow">
               {HERO.eyebrow}
             </span>
-            <h1 className="font-serif font-[560] text-[2.7rem] md:text-[5.6vw] lg:text-[4.7rem] leading-[1.08] tracking-[-0.015em] text-[#f4f0e5] mb-[1.1rem] animate-rise-in-title">
-              What we eat matters, then <em className="italic font-[480] text-[#b5cf9a]">how we grow</em> matters even more
+            <h1 className="text-[2.2rem] md:text-[4.6vw] lg:text-[3.6rem] font-bold leading-[1.15] tracking-tight text-[#f4f0e5] mb-[1.1rem] animate-rise-in-title">
+              What we eat matters, then <em className="text-[#b5cf9a]">how we grow</em> matters even more
             </h1>
-            <p className="text-[1rem] md:text-[1.5vw] lg:text-[1.14rem] text-[#f4f0e5]/80 max-w-[560px] mb-8 leading-[1.7] animate-rise-in-sub">
+            <p className="text-[1rem] md:text-[1.5vw] lg:text-[1.05rem] text-[#f4f0e5]/80 max-w-[560px] mb-8 leading-[1.7] animate-rise-in-sub">
               {HERO.sub}
             </p>
             <div className="flex flex-wrap gap-[0.85rem] animate-rise-in-actions">

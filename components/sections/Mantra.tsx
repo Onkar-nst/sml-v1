@@ -9,7 +9,7 @@ export default function Mantra() {
       id="mantra"
     >
       <div className="wrap relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.06fr_0.94fr] gap-8 md:gap-[5vw] lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-[5vw] lg:gap-16 items-center">
           <div className="flex flex-col" data-reveal>
             <span className="eyebrow">Our Mantra</span>
             <h2 className="text-[1.6rem] md:text-[3vw] lg:text-[2.35rem] leading-snug m-0 mb-[1.2rem]" data-reveal="blur">

@@ -1,4 +1,6 @@
 import { vars } from '@/lib/css'
+import BrandShowcase from '@/components/sections/BrandShowcase'
+import Presence from '@/components/sections/Presence'
 
 /** The three things the Reap name stands for, from the brand copy. */
 const PILLARS = [
@@ -15,7 +17,7 @@ export default function Brand() {
     >
       {/* the brand mantra — "more from less" — as a quiet Devanagari watermark */}
       <span 
-        className="absolute -z-10 -right-2 top-[-0.16em] font-serif text-[6.5rem] md:text-[13vw] lg:text-[11.5rem] font-semibold leading-none whitespace-nowrap text-white/[0.045] pointer-events-none select-none" 
+        className="absolute -z-10 -right-2 top-[0.12em] text-[6.5rem] md:text-[13vw] lg:text-[11.5rem] font-semibold leading-none whitespace-nowrap text-white/[0.045] pointer-events-none select-none"
         aria-hidden="true"
       >
         कम से अधिक
@@ -26,10 +28,10 @@ export default function Brand() {
           <div className="flex flex-col items-start" data-reveal="stagger">
             <div className="flex flex-col sm:flex-row gap-6 items-start mb-6">
               <span className="inline-block flex-none">
-                <img src="https://sml-ltd.com/wp-content/uploads/2024/10/Reap.jpg" alt="Reap brand mark" className="w-[118px]" />
+                <img src="/reap.png" alt="Reap brand mark" className="w-[118px]" />
               </span>
               <div>
-                <span className="inline-flex items-center gap-2 text-[0.76rem] font-bold tracking-[0.22em] uppercase text-[#a9cf87] mb-2.5 before:content-[''] before:w-5 before:h-[2px] before:bg-current before:rounded-sm">
+                <span className="inline-flex items-center gap-2 text-[0.76rem] font-bold tracking-[0.22em] uppercase text-[#a9cf87] mb-2.5 px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current">
                   Our Brand
                 </span>
                 <h2 className="text-white text-[1.9rem] md:text-[3.2vw] lg:text-[2.5rem] leading-[1.18] tracking-tight m-0">
@@ -43,7 +45,7 @@ export default function Brand() {
             </div>
             <p className="text-[0.98rem] leading-[1.75] max-w-[46ch] mb-8 text-white/72">
               The <strong className="text-white font-[650]">Reap</strong> brand is recognised for quality that helps nourish,
-              shield and increase growth and yield — the word sits intertwined within a leaf,
+              shield and increase growth and yield: the word sits intertwined within a leaf,
               a visual ode to our agricultural mission.
             </p>
           </div>
@@ -61,6 +63,14 @@ export default function Brand() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* full-bleed brand film card */}
+        <BrandShowcase />
+
+        {/* the company-scale counters close the panel */}
+        <div className="mt-12 md:mt-16">
+          <Presence />
         </div>
       </div>
     </section>

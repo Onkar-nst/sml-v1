@@ -14,7 +14,7 @@ export default function Cta() {
             alt="Farmers reviewing a crop in the field"
             className="absolute inset-0 -z-20 w-full h-full object-cover"
           />
-          <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-white mb-4 before:content-[''] before:w-5 before:h-[2px] before:bg-current before:rounded-sm">
+          <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-white mb-4 px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current">
             Get in touch
           </span>
           <h2 className="text-white max-w-[620px] mx-auto text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-[1.15] tracking-tight mb-2" data-reveal="blur">

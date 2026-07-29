@@ -10,6 +10,7 @@ type TabKey = 'all' | ProductCategory
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'all', label: 'All Products' },
   { key: 'insecticide', label: 'Insecticides' },
+  { key: 'other-insecticide', label: 'Other Insecticides' },
   { key: 'fungicide', label: 'Fungicides' },
   { key: 'herbicide', label: 'Herbicides' },
   { key: 'fertiliser', label: 'Crop Nutrition' },

@@ -11,12 +11,135 @@ const CROPPED_VIEWBOX = '0 0 804 408'
 /** How long the assembly runs — see the .is-in transitions in the stylesheet. */
 const SETTLE_MS = 900
 
-/* The asset carries the old site's inline colors. These two mark the shapes we
-   want a ping ring on: the manufacturing pins and the HQ triangles. The
-   stylesheet keys off the same values to recolor them. */
+/* The asset carries the old site's inline colors. These two identify the shapes
+   that mark a site: the manufacturing pins and the HQ triangles. */
 const PIN_FILL = '#283D77'
 const HQ_FILL = '#FFFF00'
+/* A pin is five stacked shapes and a headquarters one triangle. We read their
+   positions, then hide the lot — the beacons below are drawn in their place. */
+const MARKER_ART = ['#283D77', '#1A2C57', '#3D5991', '#FFFFFF', '#E3E3E3', '#FFFF00']
 const SVG_NS = 'http://www.w3.org/2000/svg'
+
+interface Spot {
+  kind: 'plant' | 'hq'
+  x: number
+  y: number
+}
+
+/** Where each site sits, read off the artwork before it is hidden. */
+function readSpots(svg: SVGSVGElement): Spot[] {
+  const spots: Spot[] = []
+  svg
+    .querySelectorAll<SVGGraphicsElement>(`.xtra[fill="${PIN_FILL}"], .xtra[fill="${HQ_FILL}"]`)
+    .forEach((art) => {
+      if (art.style.display === 'none') return
+      let b
+      try {
+        b = art.getBBox()
+      } catch {
+        return
+      }
+      // a pin marks its spot with the point at its base, a triangle with its middle
+      const isPin = art.getAttribute('fill') === PIN_FILL
+      spots.push({
+        kind: isPin ? 'plant' : 'hq',
+        x: b.x + b.width / 2,
+        y: b.y + (isPin ? b.height : b.height / 2),
+      })
+    })
+  return spots
+}
+
+/**
+ * Which landmass a site stands on. Hit-testing the country paths keeps the
+ * marker labels tied to the asset's own geometry rather than to coordinates
+ * copied out of it, so they survive the map being redrawn.
+ */
+function countryAt(svg: SVGSVGElement, x: number, y: number): string {
+  const lands = Array.from(svg.querySelectorAll<SVGPathElement>('.cty'))
+  const point = svg.createSVGPoint()
+  point.x = x
+  point.y = y
+
+  for (const land of lands) {
+    try {
+      if (land.id && land.isPointInFill(point)) return land.id
+    } catch {
+      /* a path the browser cannot hit-test — try the next */
+    }
+  }
+
+  // a marker sitting just off the coast falls back to the nearest named country
+  let nearest = ''
+  let best = Infinity
+  for (const land of lands) {
+    if (!land.id) continue
+    try {
+      const b = land.getBBox()
+      const d = Math.hypot(b.x + b.width / 2 - x, b.y + b.height / 2 - y)
+      if (d < best) {
+        best = d
+        nearest = land.id
+      }
+    } catch {
+      /* skip */
+    }
+  }
+  return nearest
+}
+
+/**
+ * Draws a beacon over every site: a pulsing ring, a soft halo, and a white
+ * shell around a solid core — a circle for a plant, a diamond for a
+ * headquarters, so the two read apart at a glance and at map scale.
+ *
+ * Each beacon carries the site's kind and country, which the pointer hook
+ * reads back out to fill the tooltip, and a transparent hit circle wide enough
+ * to catch a cursor aimed at something only a few pixels across.
+ */
+function buildMarkers(svg: SVGSVGElement, spots: Spot[]) {
+  const layer = document.createElementNS(SVG_NS, 'g')
+  layer.setAttribute('class', 'marks')
+
+  spots.forEach((spot, i) => {
+    const hq = spot.kind === 'hq'
+    const mark = document.createElementNS(SVG_NS, 'g')
+    mark.setAttribute('class', 'mark')
+    mark.dataset.kind = spot.kind
+    mark.dataset.country = countryAt(svg, spot.x, spot.y)
+
+    const circle = (cls: string, r: number) => {
+      const el = document.createElementNS(SVG_NS, 'circle')
+      el.setAttribute('class', cls)
+      el.setAttribute('cx', spot.x.toFixed(1))
+      el.setAttribute('cy', spot.y.toFixed(1))
+      el.setAttribute('r', String(r))
+      return el
+    }
+    const diamond = (cls: string, r: number) => {
+      const el = document.createElementNS(SVG_NS, 'path')
+      el.setAttribute('class', cls)
+      const { x, y } = spot
+      el.setAttribute('d', `M${x} ${y - r}L${x + r} ${y}L${x} ${y + r}L${x - r} ${y}Z`)
+      return el
+    }
+    const body = hq ? diamond : circle
+
+    const ping = circle('ping', hq ? 3.6 : 3)
+    ping.style.setProperty('--ping-d', `${i * 420}ms`)
+
+    mark.append(
+      ping,
+      circle('halo', hq ? 5.4 : 4.6),
+      body('shell', hq ? 3.9 : 2.9),
+      body('core', hq ? 2.5 : 1.75),
+      circle('hit', 6),
+    )
+    layer.append(mark)
+  })
+
+  if (layer.childElementCount) svg.append(layer)
+}
 
 /**
  * Loads the world map and runs the assembly animation.
@@ -74,33 +197,18 @@ export function useWorldMap(holderRef: RefObject<HTMLElement | null>): string | 
     // with that card gone the lower fifth is empty; crop to the land
     svg.setAttribute('viewBox', CROPPED_VIEWBOX)
 
-    // A ring on every plant and headquarters, so the map keeps a pulse once it
-    // has settled. Appended last, which paints them over the markers.
-    const pings = document.createElementNS(SVG_NS, 'g')
-    pings.setAttribute('class', 'pings')
+    // Read where the sites are, retire the asset's own pin and triangle
+    // artwork, then draw our beacons over the top — appended last, so they
+    // paint above the land and take the hover before it does.
+    const spots = readSpots(svg)
     svg
       .querySelectorAll<SVGGraphicsElement>(
-        `.xtra[fill="${PIN_FILL}"], .xtra[fill="${HQ_FILL}"]`,
+        MARKER_ART.map((fill) => `.xtra[fill="${fill}"]`).join(','),
       )
-      .forEach((marker, i) => {
-        if (marker.style.display === 'none') return
-        let b
-        try {
-          b = marker.getBBox()
-        } catch {
-          return
-        }
-        const ring = document.createElementNS(SVG_NS, 'circle')
-        ring.setAttribute('class', 'ping')
-        ring.setAttribute('cx', (b.x + b.width / 2).toFixed(1))
-        // a pin marks the spot with its point, an HQ triangle with its middle
-        const isPin = marker.getAttribute('fill') === PIN_FILL
-        ring.setAttribute('cy', (b.y + (isPin ? b.height : b.height / 2)).toFixed(1))
-        ring.setAttribute('r', '3')
-        ring.style.setProperty('--ping-d', `${i * 420}ms`)
-        pings.append(ring)
+      .forEach((art) => {
+        art.style.display = 'none'
       })
-    if (pings.childElementCount) svg.append(pings)
+    buildMarkers(svg, spots)
 
     let plotted = false
     const plot = () => {

@@ -27,7 +27,7 @@ export const CONTACT = {
 
 export const NAV_LINKS = [
   { href: '#about', label: 'About Us' },
-  // { href: '#business', label: 'Business' },  — section is hidden for now
+  { href: '#business', label: 'Our Business' },
   { href: '#solutions', label: 'Our Solutions' },
   // { href: '#trust', label: 'Accreditation' },  — section is hidden for now
   { href: '#contact', label: 'Contact' },
@@ -53,6 +53,8 @@ export interface WhyCard {
   tone: 'green' | 'navy'
   title: string
   body: string
+  /** sits behind the copy as a soft watermark — see WhySml */
+  img: string
 }
 
 export const WHY_CARDS: WhyCard[] = [
@@ -61,30 +63,35 @@ export const WHY_CARDS: WhyCard[] = [
     tone: 'green',
     title: 'Crop Nutrition',
     body: 'Balanced nutrition for every crop stage, backed by science.',
+    img: 'https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=700&q=65',
   },
   {
     icon: 'shield',
     tone: 'navy',
     title: 'Crop Protection',
     body: 'Effective, responsible protection from seed to yield.',
+    img: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=65',
   },
   {
     icon: 'bug',
     tone: 'green',
     title: 'Other Insecticides',
     body: 'Broad spectrum pest control across every major crop.',
+    img: 'https://images.unsplash.com/photo-1536657464919-892534f60d6e?auto=format&fit=crop&w=700&q=65',
   },
   {
     icon: 'sprout',
     tone: 'navy',
     title: 'PGR',
     body: 'Plant growth regulators that time and shape the yield.',
+    img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=65',
   },
   {
     icon: 'leaf',
     tone: 'green',
     title: 'Biologicals',
     body: 'Sustainable biological crop inputs, gentle on the environment.',
+    img: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=700&q=65',
   },
 ]
 
@@ -428,7 +435,7 @@ export const FAQS: FaqEntry[] = [
     a:
       'We work with over 10,000 channel partners through strategic alliances, contractual sales ' +
       'arrangements and subsidiary distribution networks, supplying both bulk and retail packages. ' +
-      'Write to <a href="mailto:sml@sml-ltd.com">sml@sml-ltd.com</a> or call +91 22 43452222 to ' +
+      'Call us on +91 22 43452222, or get in touch through the contact section below, to ' +
       'discuss your market.',
   },
   {
@@ -452,7 +459,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     heading: 'About Us',
     links: [
       { href: '#about', label: 'Our Purpose & Value' },
-      // { href: '#business', label: 'Our Business' },  — section is hidden for now
+      { href: '/#business', label: 'Our Business' },
       { href: 'https://sml-ltd.com/career/', label: 'Careers', external: true },
     ],
   },

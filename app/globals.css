@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
 @theme {
+  /* The site is set in one face, so the font utilities all resolve to it —
+     otherwise `font-sans` and `font-serif` fall back to Tailwind's own stacks
+     and quietly reintroduce a second and third typeface. */
+  --font-sans: var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-sans);
+
   --animate-hero-drift: hero-drift 16s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   --animate-rise-in-eyebrow: rise-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.1s;
   --animate-rise-in-title: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.2s;
@@ -47,8 +53,8 @@
   --shadow-sm: 0 2px 10px rgba(25, 49, 116, .07);
   --shadow: 0 12px 32px rgba(25, 49, 116, .12);
 
-  --sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  /* one face across the whole site — headings, body and controls alike */
+  --sans: var(--font-montserrat), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
   --nav-h: 76px;
   --topbar-h: 38px;
@@ -60,7 +66,15 @@
   * { box-sizing: border-box; }
 
   /* anchors must clear the always-on header (region bar + navbar) */
-  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + var(--topbar-h) + 12px); }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--nav-h) + var(--topbar-h) + 12px);
+    /* `clip`, not `hidden`: hidden still creates a scrollable overflow region,
+       so a sideways reveal transform (translateX(40px) on [data-reveal="right"])
+       widened the document and left a gutter down the right of every section on
+       mobile. clip discards the overflow outright — no region, no gutter. */
+    overflow-x: clip;
+  }
 
   body {
     margin: 0;
@@ -69,7 +83,8 @@
     background: #fff;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    overflow-x: hidden; /* fallback for browsers without `clip` */
+    overflow-x: clip;
   }
 
   h1, h2, h3 {
@@ -97,9 +112,14 @@
 
 /* ---------- shared bits ---------- */
 
+/* section notation: a capsule with a leading dot. Border and fill derive from
+   currentColor, so the one class works over light and dark panels alike */
 .eyebrow {
   display: inline-flex;
   align-items: center;
+  /* keep the capsule shrink-wrapped when it lands inside a flex/grid column */
+  align-self: flex-start;
+  justify-self: start;
   gap: .5rem;
   font-size: .72rem;
   font-weight: 700;
@@ -107,26 +127,17 @@
   text-transform: uppercase;
   color: var(--green);
   margin-bottom: 1rem;
+  padding: .35rem .9rem;
+  border: 1px solid color-mix(in oklab, currentColor 25%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, currentColor 8%, transparent);
 }
 .eyebrow::before {
   content: "";
-  width: 20px; height: 2px;
+  width: 7px; height: 7px;
   background: currentColor;
-  border-radius: 2px;
+  border-radius: 50%;
 }
-/* most sections sit on white, so the "light" variant stays green; the dark
-   panels flip it to white from their own module */
-.eyebrow--light { color: var(--green); }
-
-/* rounded chip eyebrow, as on the reference layout */
-.eyebrow--chip {
-  border: 1px solid rgba(67, 121, 31, .3);
-  background: var(--green-tint);
-  border-radius: 999px;
-  padding: .35rem .9rem;
-  margin-bottom: .9rem;
-}
-.eyebrow--chip::before { display: none; }
 
 .section-head { max-width: 680px; margin-bottom: 2.8rem; }
 .section-head.center { margin-inline: auto; text-align: center; }
@@ -285,9 +296,36 @@
   filter: drop-shadow(0 1px 3px rgba(67, 121, 31, .5));
 }
 
+/* ---------- site beacons ----------
+   Built by useWorldMap over each plant and headquarters: a pulsing ring, a
+   soft halo, and a white shell around a solid core. Only .hit takes the
+   pointer — everything else would steal the cursor from the country beneath. */
+
+.map-svg .marks { opacity: 0; }
+.map-svg.is-in .marks { opacity: 1; transition: opacity .32s ease .46s; }
+
+.map-svg .mark { cursor: pointer; }
+.map-svg .mark > * { pointer-events: none; }
+.map-svg .mark .hit { fill: transparent; pointer-events: all; }
+
+.map-svg .mark .halo { fill: #193174; opacity: .16; }
+.map-svg .mark .shell { fill: #fff; }
+.map-svg .mark .core { fill: #193174; }
+
+.map-svg .mark .halo,
+.map-svg .mark .shell,
+.map-svg .mark .core {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform .18s cubic-bezier(.22, .61, .36, 1), opacity .18s ease;
+}
+.map-svg .mark:hover .halo { opacity: .3; transform: scale(1.3); }
+.map-svg .mark:hover .shell,
+.map-svg .mark:hover .core { transform: scale(1.28); }
+
 .map-svg .ping {
   fill: none;
-  stroke: #43791f;
+  stroke: #193174;
   stroke-width: .9;
   opacity: 0;
   transform-box: fill-box;
@@ -297,6 +335,8 @@
 .map-svg.is-done .ping {
   animation: map-ping 2.6s var(--ping-d, 0ms) cubic-bezier(.2, .6, .35, 1) infinite;
 }
+/* the ring would otherwise keep pulsing out from under the cursor */
+.map-svg .mark:hover .ping { animation-play-state: paused; opacity: 0; }
 
 @keyframes map-ping {
   0% { transform: scale(.3); opacity: 0; }
@@ -306,7 +346,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .map-svg .cty,
-  .map-svg .xtra { opacity: 1; transform: none; transition: none; }
+  .map-svg .xtra,
+  .map-svg .marks { opacity: 1; transform: none; transition: none; }
   .map-svg.is-done .cty:hover { transform: none; }
   .map-svg .ping { display: none; }
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { CONTACT, FAQS } from '@/data/site'
+import { FAQS } from '@/data/site'
 import { ArrowRight, ChevronDown } from '@/components/ui/icons'
 
 export default function Faq() {
@@ -14,7 +14,7 @@ export default function Faq() {
       <div className="wrap">
         <div className="grid grid-cols-1 md:grid-cols-[0.82fr_1.18fr] gap-8 md:gap-[5vw] lg:gap-18 items-start">
           <div data-reveal>
-            <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 before:content-[''] before:w-5 before:h-[2px] before:bg-current before:rounded-sm">
+            <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current">
               FAQ
             </span>
             {/* the break is dropped below 900px, so keep a space either side of it */}
@@ -34,9 +34,6 @@ export default function Faq() {
               >
                 Get started
                 <ArrowRight className="transition-transform duration-300 ease-out group-hover:translate-x-[3px]" />
-              </a>
-              <a href={`mailto:${CONTACT.email}`} className="block mt-[1.1rem] text-[0.85rem] font-semibold text-[#43791f] hover:underline">
-                {CONTACT.email}
               </a>
             </div>
           </div>

@@ -3,8 +3,17 @@
 import { useEffect, type RefObject } from 'react'
 import { prefersReducedMotion } from '@/lib/reducedMotion'
 
-/** The asset ids the country names camelCased — "SouthAfrica" reads as two words. */
-const spaced = (id: string) => id.replace(/_/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2')
+/**
+ * The asset ids the country names camelCased — "SouthAfrica" reads as two
+ * words, and the joining words in a name like "TrinidadAndTobago" drop back to
+ * lower case rather than being shouted mid-title.
+ */
+const spaced = (id: string) =>
+  id
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/ (And|Of|The) /g, (_, word: string) => ` ${word.toLowerCase()} `)
+    .trim()
 
 /**
  * Pointer effects over the assembled map: a soft green light that follows the
@@ -27,7 +36,9 @@ export function useMapPointer(stageRef: RefObject<HTMLElement | null>, ready: bo
     if (!window.matchMedia('(hover: hover)').matches) return
 
     const name = stage.querySelector<HTMLElement>('[data-map-name]')
+    const kind = stage.querySelector<HTMLElement>('[data-map-kind]')
     const note = stage.querySelector<HTMLElement>('[data-map-note]')
+    if (!name || !kind || !note) return
 
     let box = stage.getBoundingClientRect()
     const remeasure = () => {
@@ -49,23 +60,45 @@ export function useMapPointer(stageRef: RefObject<HTMLElement | null>, ready: bo
       })
     }
 
+    const show = (title: string, role: string, detail: string, tone: string) => {
+      name.textContent = title
+      kind.textContent = role
+      note.textContent = detail
+      stage.dataset.tone = tone
+      stage.dataset.tip = 'on'
+    }
+
     const onOver = (e: PointerEvent) => {
-      const country = (e.target as Element).closest?.('.cty')
+      const target = e.target as Element
+
+      // a beacon wins over the country beneath it, so standing on a site tells
+      // you about the site rather than repeating the landmass
+      const mark = target.closest?.('.mark') as SVGElement | null
+      if (mark) {
+        const hq = mark.dataset.kind === 'hq'
+        show(
+          spaced(mark.dataset.country || ''),
+          hq ? 'National Headquarters' : 'Manufacturing Unit',
+          hq ? 'Country head office' : 'One of 6+ SML plants',
+          hq ? 'hq' : 'plant',
+        )
+        return
+      }
+
+      const country = target.closest?.('.cty')
       // roughly half the paths are unnamed in the asset — those get the visual
       // hover but no chip
-      if (!country?.id || !name || !note) {
+      if (!country?.id) {
         delete stage.dataset.tip
         return
       }
-      name.textContent = spaced(country.id)
-      note.textContent =
-        country.id === 'India'
-          ? 'National Headquarters'
-          : country.classList.contains('on')
-            ? 'SML customer reach'
-            : ''
-      stage.dataset.reach = country.classList.contains('on') ? 'yes' : 'no'
-      stage.dataset.tip = 'on'
+      const served = country.classList.contains('on')
+      show(
+        spaced(country.id),
+        served ? 'SML customer reach' : 'Outside current reach',
+        served ? 'One of 80+ countries served' : 'Not supplied by SML yet',
+        served ? 'reach' : 'none',
+      )
     }
 
     const onLeave = () => {
