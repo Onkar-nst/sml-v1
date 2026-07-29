@@ -40,9 +40,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
         <Header />
-        <main>{children}</main>
+        <main className="pb-[60px] md:pb-0">{children}</main>
         <Footer />
-        <WhatsAppButton />
+        <div className="hidden md:block"><WhatsAppButton /></div>
         <ScrollReveal />
       </body>
     </html>

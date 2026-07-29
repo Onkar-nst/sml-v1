@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { PRODUCTS } from '@/data/products'
-import { ArrowRight } from '@/components/ui/icons'
+import { ArrowRight, ChevronDown } from '@/components/ui/icons'
 
 const TABS = [
   { id: 'insecticide', label: 'Insecticides', system: 'IRAC', count: 24 },
