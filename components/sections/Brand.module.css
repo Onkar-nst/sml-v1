@@ -41,13 +41,23 @@
 /* ---------- left: the promise ---------- */
 
 .eyebrow {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
   font-size: .76rem;
   font-weight: 700;
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 1.4rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
 }
 
 .title {

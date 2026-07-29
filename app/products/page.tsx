@@ -18,7 +18,7 @@ export default function ProductsPage() {
       <div className="wrap">
         <div className="section-head center" data-reveal>
           <span className="eyebrow">Our Solutions</span>
-          <h2>The full range</h2>
+          <h2 data-reveal="blur">The full range</h2>
           <p>
             {PRODUCTS.length} formulations across crop protection, crop nutrition, biologicals
             and plant growth regulators. Filter by family, or download the full catalogue.

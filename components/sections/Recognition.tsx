@@ -14,7 +14,7 @@ export default function Recognition() {
       <div className="wrap">
         <div className="section-head center" data-reveal>
           <span className="eyebrow">Recognition &amp; Accreditation</span>
-          <h2>Independently recognised</h2>
+          <h2 data-reveal="blur">Independently recognised</h2>
           <p>Our work is validated by industry bodies and backed by accredited laboratories.</p>
         </div>
 

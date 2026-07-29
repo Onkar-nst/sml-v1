@@ -12,7 +12,7 @@ export default function Cta() {
             alt="Farmers reviewing a crop in the field"
           />
           <span className="eyebrow eyebrow--light">Get in touch</span>
-          <h2>Let&apos;s grow more from less</h2>
+          <h2 data-reveal="blur">Let&apos;s grow more from less</h2>
           <p>
             Whether you are a farmer, a distributor or an international partner, our team is
             ready to help you find the right solution for your soil and your crop.

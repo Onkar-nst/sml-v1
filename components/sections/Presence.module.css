@@ -20,6 +20,23 @@
   padding: clamp(2rem, 3.6vw, 3rem) clamp(1.5rem, 2.8vw, 2.4rem);
 }
 
+.figure {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+}
+
+.chip {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--green-tint);
+  color: var(--green);
+}
+
 .cell b {
   display: block;
   font-size: clamp(2.1rem, 4vw, 3.1rem);
@@ -32,7 +49,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.cell span {
+.cell > span {
   display: block;
   font-size: .92rem;
   line-height: 1.5;
@@ -48,5 +65,6 @@
 @media (max-width: 520px) {
   .grid { grid-template-columns: 1fr; }
   .cell { padding: 1.7rem 1.5rem; }
-  .cell span { margin-top: .6rem; max-width: none; }
+  .cell > span { margin-top: .6rem; max-width: none; }
+  .chip { width: 40px; height: 40px; }
 }

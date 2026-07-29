@@ -20,7 +20,7 @@ export default function Brand() {
         <div className={styles.grid}>
           <div className={styles.copy} data-reveal="stagger">
             <span className={styles.eyebrow}>Our Brand</span>
-            <h2 className={styles.title}>
+            <h2 className={styles.title} data-reveal="blur">
               One name. One leaf. From our science to your soil,{' '}
               <em>a harvest worth reaping.</em>
             </h2>

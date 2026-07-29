@@ -1,9 +1,9 @@
-/* WHY SML — a selector rail beside a dark stage
+/* WHY SML — a badge, a split headline, and a rail of capability cards
 
-   The five capabilities read as a list on the left; picking one drives a large
-   gradient panel on the right. The list advances on its own, so the section has
-   ambient motion without asking the visitor to do anything, and the progress
-   line under the active row makes that cycle legible rather than surprising. */
+   The five capabilities sit in one row of white cards, each led by a solid
+   colour disc. The rail scrolls inside the page container, so cards clip on
+   the gutter line — never the screen edge — and the cut-off card is the
+   invitation to scroll sideways for the rest. */
 
 .zone { position: relative; overflow: hidden; background: #fff; }
 
@@ -22,8 +22,10 @@
   position: relative;
   z-index: 1;
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
-  padding-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  padding-bottom: clamp(3rem, 6vw, 4.5rem);
 }
+
+/* ===================================================================== head */
 
 .head {
   display: flex;
@@ -31,263 +33,78 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.2rem 3rem;
-  margin-bottom: clamp(1.8rem, 3.5vw, 2.8rem);
+  margin-bottom: clamp(1.6rem, 3vw, 2.4rem);
 }
 .head > div { max-width: 620px; }
 .head h2 { margin: 0; }
-.lede { max-width: 400px; margin: 0; font-size: .96rem; }
+.lede { max-width: 420px; margin: 0; font-size: .96rem; }
 
 /* flat logo green for the highlighted phrase in the headline */
 .accent { color: var(--green); }
 
-/* ==================================================================== panel */
+/* ===================================================================== rail */
 
-.panel {
-  display: grid;
-  grid-template-columns: .84fr 1.16fr;
-  gap: clamp(1rem, 2.2vw, 1.6rem);
-  align-items: stretch;
-}
+.rail {
+  --gap: clamp(1rem, 1.7vw, 1.5rem);
 
-/* ---------- left: the selector rail ---------- */
-
-.rail { display: grid; gap: .55rem; align-content: start; }
-
-.row {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
   display: flex;
-  align-items: center;
-  gap: .85rem;
-  width: 100%;
-  padding: .95rem 1.1rem;
+  gap: var(--gap);
+  overflow-x: auto;
+  /* block padding keeps the hover lift and card shadows unclipped; the inline
+     sides stay at zero so cut-off cards clip exactly on the container line.
+     The end padding leaves a breath of air after the last card at full scroll. */
+  padding: .5rem 0 1.25rem;
+  padding-inline-end: var(--gap);
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+
+.card {
+  /* a quarter of the container plus a bit, so four cards fill the row and a
+     slice of the fifth stays visible — the cue that there's more to scroll */
+  flex: 0 0 clamp(240px, calc((100% - 3 * var(--gap)) / 4.4), 330px);
+  scroll-snap-align: start;
+  padding: 1.8rem 1.6rem 1.7rem;
   border: 1px solid var(--line-soft);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, .74);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, .92);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  font-family: var(--sans);
-  text-align: left;
-  cursor: pointer;
-  transition:
-    transform .35s var(--ease),
-    border-color .3s ease,
-    box-shadow .35s var(--ease);
-}
-.row:hover { transform: translateX(5px); border-color: var(--line); }
-.row:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
-
-/* green wash that wipes in from the left behind the active row */
-.row::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(90deg, rgba(67, 121, 31, .14), rgba(67, 121, 31, 0) 85%);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .5s var(--ease);
-}
-.row.on::before { transform: scaleX(1); }
-.row.on {
-  border-color: rgba(67, 121, 31, .34);
   box-shadow: var(--shadow-sm);
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
 }
+.card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 
-.rowIndex {
-  font-size: .7rem;
-  font-weight: 750;
-  letter-spacing: .1em;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-  transition: color .3s ease;
-}
-.row.on .rowIndex { color: var(--green); }
-
-.rowIcon {
-  flex: 0 0 auto;
-  width: 38px; height: 38px;
+/* a solid colour disc, alternating green and navy along the row */
+.cardIcon {
   display: grid;
   place-items: center;
-  border-radius: 10px;
-  background: var(--green-tint);
-  color: var(--green);
-  transition: background .3s ease, color .3s ease, transform .4s var(--ease);
-}
-.row.on .rowIcon { background: var(--green); color: #fff; transform: rotate(-6deg) scale(1.07); }
-.rowNavy.on .rowIcon { background: var(--navy); }
-
-.rowTitle {
-  flex: 1;
-  min-width: 0;
-  font-size: 1rem;
-  font-weight: 650;
-  color: var(--ink);
-}
-
-.rowArrow {
-  flex: 0 0 auto;
-  color: var(--green);
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity .3s ease, transform .3s var(--ease);
-}
-.row:hover .rowArrow,
-.row.on .rowArrow { opacity: 1; transform: none; }
-
-/* the auto-advance clock, drawn along the foot of the active row */
-.progress {
-  position: absolute;
-  left: 0; bottom: 0;
-  width: 100%; height: 2px;
-  background: var(--green);
-  transform: scaleX(0);
-  transform-origin: left;
-}
-.row.on .progress { animation: whyProgress var(--cycle, 5000ms) linear forwards; }
-/* hovering the rail stops the clock — the JS timer pauses in step */
-.rail:hover .row.on .progress,
-.rail:focus-within .row.on .progress { animation-play-state: paused; }
-
-@keyframes whyProgress {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-
-/* ---------- right: the stage ---------- */
-
-.stage {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 360px;
-  padding: clamp(1.8rem, 3.4vw, 3rem);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 52%, var(--green-dark) 130%);
-  color: rgba(255, 255, 255, .85);
-}
-
-/* the capability photo fills the whole panel; a navy veil, heaviest on the
-   left where the copy sits, keeps the text legible over it */
-.stageMedia {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-.stageMedia img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  animation: mediaIn .7s var(--ease) both;
-}
-.stageMedia::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, var(--navy-dark) 10%, rgba(18, 37, 89, .74) 48%, rgba(18, 37, 89, .28) 100%);
-}
-
-@keyframes mediaIn {
-  from { opacity: 0; transform: scale(1.05); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* two quiet rings drifting behind the copy */
-.stage::before,
-.stage::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, .12);
-  pointer-events: none;
-}
-.stage::before {
-  width: 430px; height: 430px;
-  top: -170px; right: -150px;
-  animation: ringDrift 18s ease-in-out infinite;
-}
-.stage::after {
-  width: 270px; height: 270px;
-  bottom: -120px; right: -50px;
-  border-color: rgba(67, 121, 31, .38);
-  animation: ringDrift 22s ease-in-out infinite reverse;
-}
-
-@keyframes ringDrift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(-22px, 18px) scale(1.06); }
-}
-
-.stageCount {
-  position: absolute;
-  top: clamp(1.3rem, 2.6vw, 2rem);
-  right: clamp(1.3rem, 2.6vw, 2rem);
-  font-size: .76rem;
-  font-weight: 700;
-  letter-spacing: .14em;
-  color: rgba(255, 255, 255, .75);
-  font-variant-numeric: tabular-nums;
-  /* sits over the photo now, so it needs its own contrast */
-  text-shadow: 0 1px 8px rgba(0, 0, 0, .45);
-}
-
-/* remounted on every change, so the entrance replays for the incoming panel */
-.stageBody > * { animation: stageIn .55s var(--ease) both; }
-.stageBody > *:nth-child(1) { animation-delay: 0ms; }
-.stageBody > *:nth-child(2) { animation-delay: 70ms; }
-.stageBody > *:nth-child(3) { animation-delay: 140ms; }
-.stageBody > *:nth-child(4) { animation-delay: 210ms; }
-
-.stage h3 {
+  background: var(--green);
   color: #fff;
-  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
-  line-height: 1.2;
-  margin: 0 0 .55rem;
+  margin-bottom: 2.2rem;
+  box-shadow: 0 10px 20px rgba(67, 121, 31, .28);
+  transition: transform .4s var(--ease);
+}
+.cardNavy .cardIcon { background: var(--navy); box-shadow: 0 10px 20px rgba(25, 49, 116, .25); }
+.card:hover .cardIcon { transform: rotate(-6deg) scale(1.07); }
+
+.card h3 {
+  font-size: 1.15rem;
+  margin: 0 0 .45rem;
 }
 
-.stageBody p {
-  font-size: 1rem;
-  line-height: 1.65;
-  max-width: 42ch;
-  margin: 0 0 1.6rem;
-  color: rgba(255, 255, 255, .78);
-}
-
-.stageLink {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  font-size: .92rem;
-  font-weight: 650;
-  color: #fff;
-  padding-bottom: .2rem;
-  border-bottom: 1.5px solid rgba(255, 255, 255, .3);
-  transition: border-color .25s ease, gap .25s var(--ease);
-}
-.stageLink:hover { border-color: #fff; gap: .75rem; }
-
-@keyframes stageIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: none; }
-}
-
-@media (max-width: 900px) {
-  .panel { grid-template-columns: 1fr; }
-  .stage { min-height: 300px; order: -1; }
-
-  /* the copy spans the full width here, so the veil evens out */
-  .stageMedia::after {
-    background: linear-gradient(180deg, rgba(18, 37, 89, .55) 0%, rgba(18, 37, 89, .86) 100%);
-  }
+.card p {
+  margin: 0;
+  font-size: .93rem;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
 @media (max-width: 560px) {
-  .row { padding: .8rem .9rem; gap: .7rem; }
-  .rowIndex { display: none; }
-  .stageBody p { font-size: .95rem; }
+  .card { flex-basis: min(250px, 78vw); padding: 1.4rem 1.3rem; }
+  .cardIcon { width: 52px; height: 52px; margin-bottom: 1.7rem; }
 }

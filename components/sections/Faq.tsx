@@ -15,9 +15,9 @@ export default function Faq() {
       <div className="wrap">
         <div className={styles.layout}>
           <div className={styles.aside} data-reveal>
-            <span className="eyebrow eyebrow--chip">FAQ</span>
+            <span className="eyebrow">FAQ</span>
             {/* the break is dropped below 900px, so keep a space either side of it */}
-            <h2>
+            <h2 data-reveal="blur">
               Frequently{' '}
               <br />
               Asked Questions

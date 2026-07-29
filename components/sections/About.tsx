@@ -1,5 +1,4 @@
 import { Flask, Users } from '@/components/ui/icons'
-import { vars } from '@/lib/css'
 import styles from './About.module.css'
 
 /** The two figures under the copy: icon chip, big number, caption. */
@@ -23,7 +22,9 @@ export default function About() {
         <div className={styles.grid}>
           <div className={styles.copy} data-reveal>
             <span className="eyebrow">About SML</span>
-            <h2 className={styles.title}>Rooted in the soil, driven by research</h2>
+            <h2 className={styles.title} data-reveal="blur">
+              Rooted in the soil, driven by research
+            </h2>
             <p className={styles.lede}>
               SML Limited, formerly Sulphur Mills Limited, is a global leader in advanced
               agricultural solutions, bringing science and passion together across soil
@@ -43,7 +44,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className={styles.media} data-reveal style={vars({ '--d': '120ms' })}>
+          <div className={styles.media}>
             <img
               src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1200&q=70"
               alt="Hands planting a seedling in a nursery tray"

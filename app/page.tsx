@@ -15,9 +15,9 @@ import Cta from '@/components/sections/Cta'
 /**
  * The homepage, in the order the sections appear.
  *
- * Everything here is a Server Component except Hero's neighbours that hold
- * state or measure the DOM — WhySml (drag rail), Presence (marquee and
- * counters), Footprint (map assembly) and Faq (accordion).
+ * Everything here is a Server Component except the sections that hold state
+ * or measure the DOM — Presence (counters), Footprint (map assembly) and
+ * Faq (accordion).
  */
 export default function HomePage() {
   return (

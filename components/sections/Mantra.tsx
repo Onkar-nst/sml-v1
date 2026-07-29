@@ -10,7 +10,7 @@ export default function Mantra() {
         <div className={styles.grid}>
           <div className={styles.copy} data-reveal>
             <span className="eyebrow">Our Mantra</span>
-            <h2 className={styles.heading}>
+            <h2 className={styles.heading} data-reveal="blur">
               Growing <em>more</em> from less
             </h2>
             <p>

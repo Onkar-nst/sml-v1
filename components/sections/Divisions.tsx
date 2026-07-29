@@ -8,7 +8,7 @@ export default function Divisions() {
       <div className="wrap">
         <div className={styles.head} data-reveal>
           <span className={styles.eyebrow}>Our Business</span>
-          <h2>
+          <h2 data-reveal="blur">
             Comprehensive agricultural solutions designed to <em>support</em> soil health, crop
             protection, and growers worldwide.
           </h2>

@@ -53,8 +53,6 @@ export interface WhyCard {
   tone: 'green' | 'navy'
   title: string
   body: string
-  /** photo shown on the stage panel for this capability */
-  image: string
 }
 
 export const WHY_CARDS: WhyCard[] = [
@@ -63,40 +61,30 @@ export const WHY_CARDS: WhyCard[] = [
     tone: 'green',
     title: 'Crop Nutrition',
     body: 'Balanced nutrition for every crop stage, backed by science.',
-    image:
-      'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1000&q=70',
   },
   {
     icon: 'shield',
     tone: 'navy',
     title: 'Crop Protection',
     body: 'Effective, responsible protection from seed to yield.',
-    image:
-      'https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1000&q=70',
   },
   {
     icon: 'bug',
     tone: 'green',
     title: 'Other Insecticides',
     body: 'Broad spectrum pest control across every major crop.',
-    image:
-      'https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=1000&q=70',
   },
   {
     icon: 'sprout',
     tone: 'navy',
     title: 'PGR',
     body: 'Plant growth regulators that time and shape the yield.',
-    image:
-      'https://images.unsplash.com/photo-1536657464919-892534f60d6e?auto=format&fit=crop&w=1000&q=70',
   },
   {
     icon: 'leaf',
     tone: 'green',
     title: 'Biologicals',
     body: 'Sustainable biological crop inputs, gentle on the environment.',
-    image:
-      'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1000&q=70',
   },
 ]
 
@@ -108,15 +96,16 @@ export interface PresenceStat {
   suffix: string
   /** the single caption line that sits under the figure */
   label: string
+  icon: IconName
 }
 
 export const PRESENCE_STATS: PresenceStat[] = [
-  { count: 6, suffix: '+', label: 'Manufacturing units across our plants' },
-  { count: 80, suffix: '+', label: 'Countries reached on every continent' },
-  { count: 250, suffix: '+', label: 'Products in the comprehensive portfolio' },
-  { count: 550, suffix: '+', label: 'Global patents from pioneering R&D' },
-  { count: 10000, suffix: '+', label: 'Channel partners in the network' },
-  { count: 10, suffix: 'M+', label: 'Growers connected to SML' },
+  { count: 6, suffix: '+', label: 'Manufacturing units across our plants', icon: 'factory' },
+  { count: 80, suffix: '+', label: 'Countries reached on every continent', icon: 'globe' },
+  { count: 250, suffix: '+', label: 'Products in the comprehensive portfolio', icon: 'package' },
+  { count: 550, suffix: '+', label: 'Global patents from pioneering R&D', icon: 'lightbulb' },
+  { count: 10000, suffix: '+', label: 'Channel partners in the network', icon: 'users' },
+  { count: 10, suffix: 'M+', label: 'Growers connected to SML', icon: 'sprout' },
 ]
 
 /* --------------------------------------------------------------- solutions */

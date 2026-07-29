@@ -14,7 +14,7 @@ export default function Gallery() {
         <div className={styles.head} data-reveal="stagger">
           <div>
             <span className="eyebrow eyebrow--chip">Our Gallery</span>
-            <h2>
+            <h2 data-reveal="blur">
               Showcasing five decades
               <br />
               of <span className={styles.accent}>agricultural innovation</span>

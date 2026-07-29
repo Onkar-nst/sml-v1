@@ -10,7 +10,7 @@ export default function Solutions() {
       <div className="wrap">
         <div className="section-head center" data-reveal>
           <span className="eyebrow">Our Solutions</span>
-          <h2>Our complete product solution</h2>
+          <h2 data-reveal="blur">Our complete product solution</h2>
           <p>
             Nutrition, protection, biologicals and growth regulation, developed and
             manufactured in our own facilities.

@@ -51,7 +51,7 @@ export default function Footprint() {
       <div className="wrap">
         <div className="section-head center" data-reveal>
           <span className="eyebrow">Global Footprint</span>
-          <h2>A global agri solution company</h2>
+          <h2 data-reveal="blur">A global agri solution company</h2>
           <p className={styles.lede}>
             We are a global agri solution company in the USA, Europe, Australia, the Middle East,
             South America, Asia, and New Zealand.
