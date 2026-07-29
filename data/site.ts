@@ -119,31 +119,31 @@ export interface CategoryTile {
 
 export const CATEGORY_TILES: CategoryTile[] = [
   {
-    href: '/products#fertiliser',
+    href: '/#solutions',
     label: 'Fertiliser',
     count: 7,
     img: 'https://sml-ltd.com/wp-content/uploads/2024/02/fertis-wg.png',
   },
   {
-    href: '/products#fungicide',
+    href: '/#solutions',
     label: 'Fungicide',
     count: 22,
     img: 'https://sml-ltd.com/wp-content/uploads/2025/02/bulton.png',
   },
   {
-    href: '/products#insecticide',
+    href: '/#solutions',
     label: 'Insecticide',
     count: 24,
     img: 'https://sml-ltd.com/wp-content/uploads/2025/02/imara.png',
   },
   {
-    href: '/products#herbicide',
+    href: '/#solutions',
     label: 'Herbicide',
     count: 15,
     img: 'https://sml-ltd.com/wp-content/uploads/2025/02/pendisul.png',
   },
   {
-    href: '/products#pgr',
+    href: '/#solutions',
     label: 'PGR',
     count: 2,
     img: 'https://sml-ltd.com/wp-content/uploads/2026/02/mahawet.jpg',
@@ -459,12 +459,12 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     heading: 'Our Solutions',
     links: [
-      { href: '/products#fertiliser', label: 'Crop Nutrition' },
-      { href: '/products#insecticide', label: 'Insecticides' },
-      { href: '/products#fungicide', label: 'Fungicides' },
-      { href: '/products#herbicide', label: 'Herbicides' },
-      { href: '/products#biological', label: 'Biologicals' },
-      { href: '/products#pgr', label: 'PGR' },
+      { href: '/#solutions', label: 'Crop Nutrition' },
+      { href: '/#solutions', label: 'Insecticides' },
+      { href: '/#solutions', label: 'Fungicides' },
+      { href: '/#solutions', label: 'Herbicides' },
+      { href: '/#solutions', label: 'Biologicals' },
+      { href: '/#solutions', label: 'PGR' },
     ],
   },
 ]

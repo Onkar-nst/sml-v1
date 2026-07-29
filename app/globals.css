@@ -1,3 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-hero-drift: hero-drift 16s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-rise-in-eyebrow: rise-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.1s;
+  --animate-rise-in-title: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.2s;
+  --animate-rise-in-sub: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.32s;
+  --animate-rise-in-actions: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.44s;
+
+  @keyframes hero-drift {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
 /* ==========================================================================
    SML Limited — global layer
 
@@ -37,42 +56,44 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
-* { box-sizing: border-box; }
+@layer base {
+  * { box-sizing: border-box; }
 
-/* anchors must clear the always-on header (region bar + navbar) */
-html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + var(--topbar-h) + 12px); }
+  /* anchors must clear the always-on header (region bar + navbar) */
+  html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + var(--topbar-h) + 12px); }
 
-body {
-  margin: 0;
-  font-family: var(--sans);
-  color: var(--body-c);
-  background: #fff;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--body-c);
+    background: #fff;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3 {
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    margin: 0 0 .5em;
+  }
+
+  h1 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
+  h2 { font-size: clamp(1.7rem, 3vw, 2.5rem); }
+  h3 { font-size: 1.2rem; }
+
+  h1 em, h2 em { font-style: normal; color: var(--green); }
+
+  p { margin: 0 0 1.1em; }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 }
-
-h1, h2, h3 {
-  color: var(--ink);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -.02em;
-  margin: 0 0 .5em;
-}
-
-h1 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); }
-h2 { font-size: clamp(1.7rem, 3vw, 2.5rem); }
-h3 { font-size: 1.2rem; }
-
-h1 em, h2 em { font-style: normal; color: var(--green); }
-
-p { margin: 0 0 1.1em; }
-a { color: inherit; text-decoration: none; }
-img { max-width: 100%; display: block; }
 
 .wrap { width: min(100% - 2.6rem, var(--max)); margin-inline: auto; }
-
-section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 
 /* ---------- shared bits ---------- */
 
@@ -200,4 +221,92 @@ section { padding: clamp(3.5rem, 7vw, 5.5rem) 0; }
 
 @media (max-width: 560px) {
   .wrap { width: min(100% - 2rem, var(--max)); }
+}
+
+/* ==========================================================================
+   GLOBAL FOOTPRINT — Map Assembly & Pings
+   ========================================================================== */
+
+.map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.map-svg .cty {
+  fill: rgba(25, 49, 116, .1);
+  stroke: rgba(25, 49, 116, .3);
+  stroke-width: .25;
+  stroke-miterlimit: 10;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(.5);
+}
+.map-svg .cty.on { fill: #43791f; }
+
+.map-svg .xtra { opacity: 0; }
+
+.map-svg .xtra[fill="#3D5991"],
+.map-svg .xtra[fill="#283D77"],
+.map-svg .xtra[fill="#1A2C57"],
+.map-svg .xtra[fill="#FFFF00"] { fill: #193174; }
+.map-svg .xtra[fill="#FFFFFF"] { fill: #fff; }
+
+.map-svg.is-in .cty {
+  opacity: 1;
+  transform: none;
+  transition:
+    transform .55s cubic-bezier(.16, .84, .32, 1) var(--dly, 0ms),
+    opacity .22s ease var(--dly, 0ms);
+}
+.map-svg.is-in .xtra {
+  opacity: 1;
+  transition: opacity .32s ease .46s;
+}
+
+.map-svg.is-done .cty {
+  transition:
+    fill .16s ease,
+    stroke .16s ease,
+    stroke-width .16s ease,
+    transform .2s cubic-bezier(.22, .61, .36, 1);
+}
+.map-svg.is-done .cty:hover {
+  fill: rgba(67, 121, 31, .28);
+  stroke: #43791f;
+  stroke-width: .55;
+  transform: scale(1.035);
+}
+.map-svg.is-done .cty.on:hover {
+  fill: #365f1a;
+  stroke: #365f1a;
+  filter: drop-shadow(0 1px 3px rgba(67, 121, 31, .5));
+}
+
+.map-svg .ping {
+  fill: none;
+  stroke: #43791f;
+  stroke-width: .9;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  pointer-events: none;
+}
+.map-svg.is-done .ping {
+  animation: map-ping 2.6s var(--ping-d, 0ms) cubic-bezier(.2, .6, .35, 1) infinite;
+}
+
+@keyframes map-ping {
+  0% { transform: scale(.3); opacity: 0; }
+  14% { opacity: .7; }
+  70%, 100% { transform: scale(3.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-svg .cty,
+  .map-svg .xtra { opacity: 1; transform: none; transition: none; }
+  .map-svg.is-done .cty:hover { transform: none; }
+  .map-svg .ping { display: none; }
 }

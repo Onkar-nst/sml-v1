@@ -1,5 +1,4 @@
 import Hero from '@/components/sections/Hero'
-import WhySml from '@/components/sections/WhySml'
 import About from '@/components/sections/About'
 import Presence from '@/components/sections/Presence'
 import Solutions from '@/components/sections/Solutions'
@@ -23,7 +22,6 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <WhySml />
       <About />
       <Presence />
       <Solutions />

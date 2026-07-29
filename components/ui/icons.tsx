@@ -46,6 +46,12 @@ export const ArrowRight = (p: IconProps) => (
   </Stroke>
 )
 
+export const ArrowLeft = (p: IconProps) => (
+  <Stroke size={16} strokeWidth={2.4} {...p}>
+    <path d="M19 12H5M11 18l-6-6 6-6" />
+  </Stroke>
+)
+
 export const Download = (p: IconProps) => (
   <Stroke size={16} strokeWidth={2.4} {...p}>
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
@@ -62,6 +68,13 @@ export const Mail = (p: IconProps) => (
 export const Check = (p: IconProps) => (
   <Stroke size={18} strokeWidth={2.4} {...p}>
     <path d="M20 6L9 17l-5-5" />
+  </Stroke>
+)
+
+export const CheckCircle = (p: IconProps) => (
+  <Stroke size={18} strokeWidth={2.4} {...p}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m9 12 2 2 4-4" />
   </Stroke>
 )
 

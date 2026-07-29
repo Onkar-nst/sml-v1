@@ -4,7 +4,6 @@ import { useMemo, useState, useSyncExternalStore } from 'react'
 
 import { PRODUCTS, type ProductCategory } from '@/data/products'
 import ProductCard from '@/components/ui/ProductCard'
-import styles from './Catalogue.module.css'
 
 type TabKey = 'all' | ProductCategory
 
@@ -55,23 +54,29 @@ export default function Catalogue() {
 
   return (
     <>
-      <div className={styles.tabs} role="tablist">
+      <div className="flex flex-wrap gap-[0.55rem] justify-center mb-[2.4rem]" role="tablist">
         {TABS.map((tab) => (
           <button
             key={tab.key}
             type="button"
             role="tab"
             aria-selected={active === tab.key}
-            className={`${styles.tab}${active === tab.key ? ` ${styles.active}` : ''}`}
+            className={`px-[1.25rem] py-[0.58rem] rounded-full border font-sans text-[0.88rem] font-semibold cursor-pointer transition-all duration-250 ease-out ${
+              active === tab.key
+                ? 'bg-[#43791f] border-[#43791f] text-white'
+                : 'border-[#193174]/14 bg-white text-[#193174]/78 hover:border-[#43791f] hover:text-[#43791f]'
+            }`}
             onClick={() => setPicked(tab.key)}
           >
             {tab.label}
-            <span>{counts[tab.key]}</span>
+            <span className={`inline-block ml-[0.4rem] text-[0.74rem] ${active === tab.key ? 'opacity-80' : 'opacity-55'}`}>
+              {counts[tab.key]}
+            </span>
           </button>
         ))}
       </div>
 
-      <div className={styles.grid}>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(216px,1fr))] gap-3 sm:gap-[1.1rem]">
         {visible.map((product, i) => (
           <ProductCard
             key={product.name}
