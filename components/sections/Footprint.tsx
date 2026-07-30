@@ -13,7 +13,7 @@ function MapHolder() {
   useMapPointer(stage, Boolean(markup))
 
   return (
-    <div className="relative max-w-[1080px] mx-auto mb-10 group/stage" ref={stage}>
+    <div className="relative max-w-[1080px] mx-auto group/stage" ref={stage}>
       {markup ? (
         <div
           className="w-full"
@@ -59,7 +59,7 @@ export default function Footprint() {
   return (
     /* Divisions follows on the same white, so the bottom padding is trimmed —
        the two sections share one gap instead of stacking two */
-    <section className="bg-white relative z-10 pt-14 md:pt-20 lg:pt-24 pb-10 md:pb-12" id="footprint">
+    <section className="bg-white relative z-10 pt-8  pb-10 md:pb-12" id="footprint">
       <div className="wrap">
         <div className="max-w-[680px] mb-11 mx-auto text-center" data-reveal>
           <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#43791f] mb-4 px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current">

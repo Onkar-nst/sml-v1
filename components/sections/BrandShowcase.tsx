@@ -34,7 +34,7 @@ export default function BrandShowcase() {
     // 16:9 at every width — the film's own aspect, so the frame is never
     // cropped and the watermark in its corner stays whole
     <figure
-      className="relative m-0 mt-12 md:mt-16 overflow-hidden rounded-[20px] md:rounded-[28px] aspect-video bg-[#122559]"
+      className="relative m-0 mt-12 md:mt-16 overflow-hidden rounded-[20px] md:rounded-[28px] aspect-video md:aspect-[17/9] bg-[#122559]"
       data-reveal="blur"
     >
       <video

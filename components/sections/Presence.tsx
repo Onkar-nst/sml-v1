@@ -50,7 +50,7 @@ export default function Presence() {
   return (
     /* About already pads its own foot, so this section only pads below —
        otherwise the two paddings stack into a gap twice the size */
-    <section id="presence" aria-label="SML at a glance" className="pt-0 pb-14 md:pb-18">
+    <section id="presence" aria-label="SML at a glance" className="pt-0 ">
       <div className="wrap" data-reveal>
         {/* dark ground + leaf motif; the grid itself is unchanged and simply
             sits on top of it */}

@@ -32,26 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-/**
- * The overview line is assembled from the published facts rather than written
- * as copy — every clause below comes from the composition on the product page.
- * Pack sizes are deliberately left out: they already have their own chips in
- * the spec card and the spec table.
- */
-function overview(product: Product, detail?: { composition?: string }) {
-  const cat = product.catLabel.toLowerCase()
-  const sentences: string[] = []
 
-  sentences.push(
-    detail?.composition
-      ? `${product.name} is SML's ${cat}, supplied as ${detail.composition}.`
-      : `${product.name} is a ${cat} from the SML range.`,
-  )
-  if (product.note && product.note !== detail?.composition) {
-    sentences.push(product.note.endsWith('.') ? product.note : `${product.note}.`)
-  }
-  return sentences.join(' ')
-}
 
 /** A small green-ruled section label, as used down the whole spec sheet. */
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -138,16 +119,7 @@ export default async function ProductDetailPage({ params }: Props) {
                 {product.name}
               </h1>
 
-              {detail?.composition && (
-                <div className="mt-4 pt-4 border-t border-white/15">
-                  <span className="block text-[0.62rem] font-bold uppercase tracking-[0.2em] text-white/65">
-                    Composition
-                  </span>
-                  <p className="text-[0.95rem] text-white/90 leading-relaxed m-0 mt-1.5">
-                    {detail.composition}
-                  </p>
-                </div>
-              )}
+             
 
               {/* no rule above this one — the labels already separate the two
                   facts, and a second line inside the card read as clutter */}
@@ -198,29 +170,28 @@ export default async function ProductDetailPage({ params }: Props) {
           {/* the spec sheet */}
           <div className="flex flex-col gap-5">
 
-            {/* the overview and the claims it supports read as one block — the
-                prose sets the product up and the numbered tiles carry it on */}
-            <section className="bg-white border border-[#193174]/8 rounded-2xl px-6 py-5">
-              <SectionLabel>Product overview</SectionLabel>
-              <p className="text-[0.92rem] leading-[1.75] text-[#193174]/70 m-0">
-                {overview(product, detail)}
-              </p>
+            {detail?.composition && (
+              <section className="bg-white border border-[#193174]/8 rounded-2xl px-6 py-5">
+                <SectionLabel>Composition</SectionLabel>
+                <p className="text-[0.92rem] leading-[1.75] text-[#193174]/70 m-0">
+                  {detail.composition}
+                </p>
+              </section>
+            )}
 
-              {detail?.benefits && detail.benefits.length > 0 && (
-                <>
-                  <div className="flex items-center justify-between gap-4 mt-6 pt-5 border-t border-[#193174]/8 mb-4">
-                    <SectionLabel>Key benefits</SectionLabel>
-                    <span className="text-[0.68rem] font-bold text-[#43791f] bg-[#43791f]/8 px-2.5 py-1 rounded-full tabular-nums -mt-3">
-                      {detail.benefits.length} reasons
-                    </span>
-                  </div>
-
-                  {/* numbered tiles rather than a tick list — each claim reads as
-                      its own point, and a long list collapses behind a toggle */}
-                  <ProductBenefits benefits={detail.benefits} />
-                </>
-              )}
-            </section>
+            {detail?.benefits && detail.benefits.length > 0 && (
+              <section className="bg-white border border-[#193174]/8 rounded-2xl px-6 py-5">
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <SectionLabel>Key benefits</SectionLabel>
+                  <span className="text-[0.68rem] font-bold text-[#43791f] bg-[#43791f]/8 px-2.5 py-1 rounded-full tabular-nums -mt-3">
+                    {detail.benefits.length} reasons
+                  </span>
+                </div>
+                {/* numbered tiles rather than a tick list — each claim reads as
+                    its own point, and a long list collapses behind a toggle */}
+                <ProductBenefits benefits={detail.benefits} />
+              </section>
+            )}
 
             <section className="bg-white border border-[#193174]/8 rounded-2xl px-6 py-5">
               <SectionLabel>Specifications</SectionLabel>

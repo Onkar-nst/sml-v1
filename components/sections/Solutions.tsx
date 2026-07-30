@@ -63,7 +63,7 @@ export default function Solutions() {
     /* the band is white and the shelves carry the sand tint — the cards read as
        raised surfaces over the page, and the white pack-shot wells inside them
        stay the brightest thing in the section */
-    <section id="solutions" className="bg-white">
+    <section id="solutions" className="bg-white md:-mt-12">
       <div className="max-w-[1180px] w-[calc(100%-2.6rem)] mx-auto">
 
         {/* Header */}

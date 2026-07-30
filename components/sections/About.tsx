@@ -44,7 +44,7 @@ export default function About() {
             {/* centred on the copy it follows — it shares the 32rem measure of the
                 intro and the list, so it reads as the end of that block rather
                 than a button parked at an arbitrary indent */}
-            <div className="mt-auto pt-8 md:pt-[3vw] lg:pt-10 w-full max-w-[32rem] flex justify-center">
+            <div className="mt-auto pt-8 md:pt-[3vw] lg:pt-10 w-full max-w-[32rem] flex justify-left">
               <a
                 href="#brand"
                 className="group inline-flex items-center gap-4 pl-7 pr-2 py-2 rounded-full font-sans font-semibold text-[0.95rem] text-white whitespace-nowrap cursor-pointer bg-[linear-gradient(100deg,#5c9a37_0%,#43791f_58%,#356316_100%)] shadow-[0_10px_24px_rgba(67,121,31,0.28)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(67,121,31,0.34)]"
