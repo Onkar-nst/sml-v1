@@ -241,18 +241,6 @@ export default async function ProductDetailPage({ params }: Props) {
                 >
                   Speak with an expert <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
-                {/* icon only — the chat opens with this SKU already named in the
-                    first message, so the enquiry arrives with its context */}
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener"
-                  aria-label={`Enquire about ${product.name} on WhatsApp`}
-                  title={`Enquire about ${product.name} on WhatsApp`}
-                  className="grid place-items-center w-[42px] h-[42px] rounded-lg bg-white/10 hover:bg-white/18 text-white transition-colors"
-                >
-                  <WhatsApp size={19} />
-                </a>
               </div>
             </section>
 
