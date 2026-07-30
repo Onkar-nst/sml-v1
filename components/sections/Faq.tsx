@@ -10,7 +10,7 @@ export default function Faq() {
   const [open, setOpen] = useState<number | null>(null)
 
   return (
-    <section className="bg-white py-12 " id="faq">
+    <section className="bg-white py-12 md:py-6 " id="faq">
       <div className="wrap">
         <div className="grid grid-cols-1 md:grid-cols-[0.82fr_1.18fr] gap-8 md:gap-[5vw] lg:gap-18 items-start">
           <div data-reveal>
