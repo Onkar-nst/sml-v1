@@ -13,12 +13,24 @@ export default function Divisions() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Below sm the divisions ride a horizontal scroller — one and a half
+            cards to a screen, so the row reads as swipeable at a glance.
+            Because the trailing pr-4 matches the gap, 100% / 1.5 of the padded
+            box lands the cut on the gutter at every phone width.
+
+            Horizontal-only on touch: touch-pan-x locks a swipe that starts on a
+            card to the horizontal axis, and overflow-y-hidden stops the box
+            from picking up a vertical scroll of its own — declaring overflow on
+            one axis makes the browser treat the other as `auto`. Mandatory
+            snapping lands each swipe on a card, and overscroll-x-contain keeps a
+            fling at either end from chaining out to the browser's back gesture.
+            All of it is dropped at sm, where the row becomes a plain grid. */}
+        <div className="flex gap-4 overflow-x-auto overflow-y-hidden py-1 pr-4 snap-x snap-mandatory touch-pan-x overscroll-x-contain scrollbar-none sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible sm:overflow-y-visible sm:py-0 sm:pr-0 sm:touch-auto sm:snap-none">
           {DIVISIONS.map((division, i) => {
             const isFeatured = i === 0
             return (
               <div
-                className={`flex flex-col min-h-[260px] max-[620px]:min-h-0 rounded-2xl p-6 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-sm group ${
+                className={`flex flex-col flex-none w-[calc(100%/1.5)] snap-start sm:w-auto min-h-[260px] max-[620px]:min-h-0 rounded-2xl p-6 max-[620px]:px-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-sm group ${
                   isFeatured 
                     ? 'bg-[#43791f] hover:bg-[#365f1a]' 
                     : 'bg-[#193174]/4'
@@ -27,9 +39,11 @@ export default function Divisions() {
                 data-reveal
                 style={vars({ '--d': `${i * 80}ms` })}
               >
-                {/* Below sm the number sits beside the title; above it, stacked. */}
-                <div className="flex items-center gap-[0.9rem] sm:block">
-                  <div className={`shrink-0 w-[38px] h-[38px] grid place-items-center rounded-full text-[0.74rem] font-semibold sm:mb-[1.3rem] transition-colors duration-300 ${
+                {/* The number stacks above the title at every width — beside it,
+                    a name as long as Sumil Chemical Industries has barely half a
+                    carousel card to wrap into. */}
+                <div>
+                  <div className={`shrink-0 w-[38px] h-[38px] grid place-items-center rounded-full text-[0.74rem] font-semibold mb-4 sm:mb-[1.3rem] transition-colors duration-300 ${
                     isFeatured ? 'bg-white/22 text-white' : 'bg-white text-[#193174]/55'
                   }`}>
                     {String(i + 1).padStart(2, '0')}.
@@ -40,11 +54,34 @@ export default function Divisions() {
                     {division.name}
                   </h3>
                 </div>
-                <p className={`mt-auto pt-7 max-[620px]:pt-[1.1rem] text-[0.82rem] leading-[1.6] ${
+                {/* The copy follows straight on from the name, and the facts take
+                    the room the old mt-auto push left empty between them — sized
+                    so a three-fact card still lands inside the 260px minimum
+                    rather than growing the row. */}
+                <p className={`mt-1.5 text-[0.82rem] leading-[1.55] ${
                   isFeatured ? 'text-white/85' : 'text-[#193174]/55'
                 }`}>
                   {division.body}
                 </p>
+
+                <ul className="list-none p-0 m-0 mt-[0.85rem] flex flex-col gap-[0.3rem]">
+                  {division.facts.slice(0, 3).map((fact) => (
+                    <li
+                      key={fact}
+                      className={`flex items-start gap-2 text-[0.76rem] leading-[1.45] ${
+                        isFeatured ? 'text-white/80' : 'text-[#193174]/65'
+                      }`}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`flex-none size-[5px] rounded-full mt-[0.4rem] ${
+                          isFeatured ? 'bg-white/70' : 'bg-[#43791f]'
+                        }`}
+                      />
+                      {fact}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )
           })}

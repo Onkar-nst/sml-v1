@@ -4,6 +4,7 @@ import { Montserrat } from 'next/font/google'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import WhatsAppButton from '@/components/layout/WhatsAppButton'
+import EnquiryProvider from '@/components/enquiry/EnquiryProvider'
 import ScrollReveal from '@/components/ui/ScrollReveal'
 
 import './globals.css'
@@ -33,10 +34,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={montserrat.variable}>
       <body>
-        <Header />
-        <main className="pb-[60px] md:pb-0">{children}</main>
-        <Footer />
-        <div className="hidden md:block"><WhatsAppButton /></div>
+        {/* every enquiry button on the site opens the one dialog this provides */}
+        <EnquiryProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <div className="hidden md:block"><WhatsAppButton /></div>
+        </EnquiryProvider>
         <ScrollReveal />
       </body>
     </html>

@@ -13,12 +13,24 @@
   --animate-rise-in-sub: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.32s;
   --animate-rise-in-actions: rise-in 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both 0.44s;
 
+  /* the enquiry dialog — the scrim fades, the panel rises under it */
+  --animate-scrim-in: scrim-in 0.2s ease-out both;
+  --animate-panel-in: panel-in 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+
   @keyframes hero-drift {
     from { transform: scale(1.08); }
     to { transform: scale(1); }
   }
   @keyframes rise-in {
     from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes scrim-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes panel-in {
+    from { opacity: 0; transform: translateY(22px) scale(0.985); }
     to { opacity: 1; transform: none; }
   }
 }
@@ -304,7 +316,24 @@
 .map-svg .marks { opacity: 0; }
 .map-svg.is-in .marks { opacity: 1; transition: opacity .32s ease .46s; }
 
-.map-svg .mark { cursor: pointer; }
+/* A beacon is drawn in viewBox units, so it shrinks with the map: the same core
+   that reads as a 4.7px dot against a 1080px map is 1.7px against a 390px one,
+   which is no marker at all. --mark-k scales the whole beacon back up as the
+   map narrows, so a site stays about as prominent on a phone as on a desktop.
+   The steps are deliberately short of full compensation — matching the desktop
+   size exactly would leave the dots overpowering the countries under them. */
+.map-svg .mark {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(var(--mark-k, 1));
+}
+@media (max-width: 1100px) { .map-svg .mark { --mark-k: 1.15 } }
+@media (max-width: 900px)  { .map-svg .mark { --mark-k: 1.4 } }
+@media (max-width: 700px)  { .map-svg .mark { --mark-k: 1.7 } }
+@media (max-width: 520px)  { .map-svg .mark { --mark-k: 2 } }
+@media (max-width: 400px)  { .map-svg .mark { --mark-k: 2.2 } }
+
 .map-svg .mark > * { pointer-events: none; }
 .map-svg .mark .hit { fill: transparent; pointer-events: all; }
 
@@ -323,10 +352,21 @@
 .map-svg .mark:hover .shell,
 .map-svg .mark:hover .core { transform: scale(1.28); }
 
+/* The halo breathes on the same clock as the ring, so a site is announcing
+   itself for most of the cycle rather than only at the instant the ring fires —
+   which is what makes the beacons findable without a cursor to sweep for them. */
+.map-svg.is-done .mark .halo {
+  animation: map-halo 2.6s var(--ping-d, 0ms) ease-in-out infinite;
+}
+.map-svg .mark:hover .halo { animation-play-state: paused; }
+
 .map-svg .ping {
   fill: none;
   stroke: #193174;
-  stroke-width: .9;
+  /* in screen pixels, not viewBox units — a .9-unit ring is under half a pixel
+     on a phone, and the browser fades it to nothing */
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
@@ -340,8 +380,14 @@
 
 @keyframes map-ping {
   0% { transform: scale(.3); opacity: 0; }
-  14% { opacity: .7; }
+  12% { opacity: .9; }
   70%, 100% { transform: scale(3.4); opacity: 0; }
+}
+
+@keyframes map-halo {
+  0%, 100% { opacity: .16; transform: scale(1); }
+  16% { opacity: .38; transform: scale(1.22); }
+  55% { opacity: .16; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -350,4 +396,7 @@
   .map-svg .marks { opacity: 1; transform: none; transition: none; }
   .map-svg.is-done .cty:hover { transform: none; }
   .map-svg .ping { display: none; }
+  /* the beacons still need to be findable — hold the halo at its bright end
+     instead of pulsing it */
+  .map-svg.is-done .mark .halo { animation: none; opacity: .34; }
 }

@@ -125,11 +125,11 @@ function buildMarkers(svg: SVGSVGElement, spots: Spot[]) {
     }
     const body = hq ? diamond : circle
 
-    const ping = circle('ping', hq ? 3.6 : 3)
-    ping.style.setProperty('--ping-d', `${i * 420}ms`)
+    // the offset lives on the group so the ring and the halo pulse together
+    mark.style.setProperty('--ping-d', `${i * 420}ms`)
 
     mark.append(
-      ping,
+      circle('ping', hq ? 3.6 : 3),
       circle('halo', hq ? 5.4 : 4.6),
       body('shell', hq ? 3.9 : 2.9),
       body('core', hq ? 2.5 : 1.75),

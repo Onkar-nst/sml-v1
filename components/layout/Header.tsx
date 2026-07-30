@@ -1,9 +1,31 @@
 'use client'
 
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
 import { BROCHURE_URL, NAV_LINKS } from '@/data/site'
 import { Download, Globe } from '@/components/ui/icons'
+import { useEnquiry } from '@/components/enquiry/EnquiryProvider'
 
 export default function Header() {
+  const { open: openEnquiry } = useEnquiry()
+
+  // Mobile navbar rides transparent over the dark hero, then turns solid once scrolled.
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    onScroll() // page may already be scrolled (hash link, restored position)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // The dark hero only exists on the homepage — everywhere else the navbar sits
+  // on a light page, so it starts in its solid state and never changes on scroll.
+  const pathname = usePathname()
+  const solid = scrolled || pathname !== '/'
+
   return (
     <>
       {/* ─── TOP HEADER ─────────────────────────────────────────────────────── */}
@@ -37,14 +59,26 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Main navbar — transparent on mobile, solid white on desktop */}
-        <div className="h-16 flex items-center md:bg-white/95 md:backdrop-blur-md md:border-b md:border-slate-100 md:shadow-[0_2px_16px_rgba(25,49,116,0.05)]">
+        {/* Main navbar — transparent on mobile until scrolled, always solid white on desktop */}
+        <div
+          className={`h-16 flex items-center transition-colors duration-300 md:bg-white/95 md:backdrop-blur-md md:border-b md:border-slate-100 md:shadow-[0_2px_16px_rgba(25,49,116,0.05)] ${
+            solid
+              ? 'bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-[0_2px_16px_rgba(25,49,116,0.05)]'
+              : 'bg-transparent'
+          }`}
+        >
           <div className="w-full max-w-[1240px] px-4 mx-auto flex items-center justify-between">
 
-            {/* Logo */}
-            <a href="#top" aria-label="SML Limited home" className="flex-none">
-              <img src="/sml-logo.svg" alt="SML Limited" className="h-9 w-auto" />
-            </a>
+            {/* Logo — whitened over the hero on mobile, natural brand colours once scrolled */}
+            <Link href="/#top" aria-label="SML Limited home" className="flex-none">
+              <img
+                src="/sml-logo.svg"
+                alt="SML Limited"
+                className={`h-9 w-auto transition-[filter] duration-300 md:brightness-100 md:invert-0 ${
+                  solid ? '' : 'brightness-0 invert'
+                }`}
+              />
+            </Link>
 
             {/* Desktop nav links */}
             <ul className="hidden md:flex items-center gap-7 list-none m-0 p-0 ml-auto">
@@ -68,13 +102,18 @@ export default function Header() {
               Explore Products
             </a>
 
-            {/* Mobile — Enquiry pill, floats over the hero */}
-            <a
-              href="mailto:sml@sml-ltd.com?subject=Enquiry&body=Hello SML Team,%0D%0A%0D%0AI am writing to enquire about SML solutions.%0D%0A%0D%0AThank you."
-              className="md:hidden inline-flex items-center justify-center px-5 py-2 rounded-full bg-white text-[#193174] text-[13px] font-bold shadow-lg active:scale-95 transition-transform"
+            {/* Mobile — Enquiry pill: white over the hero, brand green on the white navbar */}
+            <button
+              type="button"
+              onClick={() => openEnquiry()}
+              className={`md:hidden inline-flex items-center justify-center px-5 py-2 rounded-full text-[13px] font-bold active:scale-95 transition-all duration-300 cursor-pointer ${
+                solid
+                  ? 'bg-[#43791f] text-white shadow-[0_4px_14px_rgba(67,121,31,0.3)]'
+                  : 'bg-white text-[#193174] shadow-lg'
+              }`}
             >
               Enquiry
-            </a>
+            </button>
 
           </div>
         </div>

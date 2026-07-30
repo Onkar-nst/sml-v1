@@ -9,7 +9,13 @@ export default function Hero() {
         <img src={HERO.image} alt={HERO.imageAlt} className="w-full h-full object-cover animate-hero-drift" />
       </div>
 
-      <section className="min-h-[100svh] flex items-end pt-[calc(114px+3rem)] pb-0">
+      {/* On desktop the hero is a full viewport with the copy sitting on the
+          floor of it. On a phone that same rule left the leftover height as
+          dead space under the navbar, so the small screen drops the min-height
+          and takes its height from the copy. The padding clears the fixed header
+          (36px bar + 64px navbar) and then adds a breath, so the eyebrow reads
+          as the start of a section rather than a continuation of the navbar. */}
+      <section className="flex items-end pt-[calc(100px+4rem)] pb-0 md:min-h-[100svh] md:pt-[calc(114px+3rem)]">
         <div className="wrap">
           <div className="max-w-[880px] pb-12 md:pb-[6vw] lg:pb-20">
             <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold tracking-[0.18em] uppercase text-[#b5cf9a] mb-[1.2rem] px-[0.9rem] py-[0.35rem] rounded-full border border-current/25 bg-current/8 before:content-[''] before:size-[7px] before:rounded-full before:bg-current animate-rise-in-eyebrow">

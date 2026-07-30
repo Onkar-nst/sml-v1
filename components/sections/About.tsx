@@ -1,30 +1,20 @@
-import { Flask, Users, CheckCircle } from '@/components/ui/icons'
-
-
-const STATS = [
-  {
-    icon: Flask,
-    value: '50+',
-    label: 'Years of research behind every SML formulation.',
-  },
-  {
-    icon: Users,
-    value: '10,000+',
-    label: 'Channel partners taking our solutions to growers.',
-  },
-]
+import { ArrowRight, CheckCircle } from '@/components/ui/icons'
 
 export default function About() {
   return (
     <section id="about" className="py-14">
       <div className="wrap">
-        <div className="grid grid-cols-1 lg:grid-cols-[0.96fr_1.04fr] gap-10 md:gap-[5vw] lg:gap-[4.5rem] items-center">
+        {/* from lg the two columns share a row height, so the photo runs the full
+            length of the copy beside it instead of sitting centred and short */}
+        <div className="grid grid-cols-1 lg:grid-cols-[0.96fr_1.04fr] gap-10 md:gap-[5vw] lg:gap-[4.5rem] items-center lg:items-stretch">
           <div className="flex flex-col items-start py-2 md:py-[1.5vw] lg:py-6" data-reveal>
             <span className="eyebrow">About SML</span>
             <h2 className="text-[1.75rem] md:text-[2.8vw] lg:text-[2.35rem] leading-[1.14] tracking-tight mb-[0.9em]" data-reveal="blur">
               Rooted in the soil, driven by research
             </h2>
-            <p className="text-[0.97rem] leading-[1.8] max-w-[32rem] text-[#193174]/55">
+            {/* same ink as the points below it — the intro used to sit lighter
+                than the list and read as secondary to it */}
+            <p className="text-[0.97rem] leading-[1.8] max-w-[32rem] text-[#193174]/78">
               SML Limited, formerly Sulphur Mills Limited, is a global leader in advanced
               agricultural solutions, bringing science and passion together across soil
               health, nutrition, biologicals and crop protection.
@@ -51,24 +41,27 @@ export default function About() {
               </li>
             </ul>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8 w-full mt-auto pt-8 sm:pt-10 md:pt-[5vw] lg:pt-16">
-              {STATS.map(({ icon: Icon, value, label }) => (
-                <div key={value} className="flex flex-col">
-                  <span className="grid place-items-center w-[54px] h-[54px] rounded-full bg-[#43791f]/8 text-[#43791f] mb-[1.1rem]">
-                    <Icon size={22} />
-                  </span>
-                  <b className="block text-[1.7rem] md:text-[2.4vw] lg:text-[2.15rem] font-[750] leading-none tracking-tight text-[#193174] mb-2">{value}</b>
-                  <p className="text-[0.88rem] leading-[1.6] max-w-[15rem] sm:max-w-none m-0 text-[#193174]/55">{label}</p>
-                </div>
-              ))}
+            {/* centred on the copy it follows — it shares the 32rem measure of the
+                intro and the list, so it reads as the end of that block rather
+                than a button parked at an arbitrary indent */}
+            <div className="mt-auto pt-8 md:pt-[3vw] lg:pt-10 w-full max-w-[32rem] flex justify-center">
+              <a
+                href="#brand"
+                className="group inline-flex items-center gap-4 pl-7 pr-2 py-2 rounded-full font-sans font-semibold text-[0.95rem] text-white whitespace-nowrap cursor-pointer bg-[linear-gradient(100deg,#5c9a37_0%,#43791f_58%,#356316_100%)] shadow-[0_10px_24px_rgba(67,121,31,0.28)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(67,121,31,0.34)]"
+              >
+                Our Story
+                <span className="grid place-items-center size-[42px] rounded-full bg-white/22 transition-transform duration-300 ease-out group-hover:translate-x-[3px]">
+                  <ArrowRight size={18} />
+                </span>
+              </a>
             </div>
           </div>
 
-          <div className="w-full order-first lg:order-none">
+          <div className="w-full order-first lg:order-none lg:h-full">
             <img
               src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=1200&q=70"
               alt="Hands planting a seedling in a nursery tray"
-              className="w-full h-auto aspect-[4/3] lg:aspect-auto max-h-[25rem] md:max-h-[42vw] lg:max-h-[34rem] object-cover rounded-2xl block"
+              className="w-full h-auto aspect-[4/3] lg:aspect-auto lg:h-full max-h-[25rem] md:max-h-[42vw] lg:max-h-none object-cover rounded-2xl block"
             />
           </div>
         </div>

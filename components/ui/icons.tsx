@@ -84,6 +84,12 @@ export const Plus = (p: IconProps) => (
   </Stroke>
 )
 
+export const Close = (p: IconProps) => (
+  <Stroke size={16} strokeWidth={2.4} {...p}>
+    <path d="M18 6 6 18M6 6l12 12" />
+  </Stroke>
+)
+
 export const ChevronDown = (p: IconProps) => (
   <Stroke size={16} strokeWidth={2.2} {...p}>
     <path d="M6 9l6 6 6-6" />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import {
   PRODUCT_FAMILIES,
   familyCount,
@@ -9,16 +9,40 @@ import {
   type ProductSub,
 } from '@/data/products'
 import { ArrowRight, ChevronDown, Mail } from '@/components/ui/icons'
+import { useEnquiry } from '@/components/enquiry/EnquiryProvider'
 
 const PAGE_SIZE = 6
 
-export default function Solutions() {
-  const [familyId, setFamilyId] = useState(PRODUCT_FAMILIES[0].id)
-  const [subId, setSubId] = useState(PRODUCT_FAMILIES[0].subs[0].id)
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+/* The Why-SML cards deep-link in as #pgr, #biologicals and so on — each family
+   chip below carries its family id, so the browser scrolls to the chip and this
+   section opens that range. As in Catalogue, the hash is browser state rather
+   than React state, so it is read through useSyncExternalStore: the server
+   render stays neutral and back/forward between ranges works for free. */
+const subscribeToHash = (onChange: () => void) => {
+  window.addEventListener('hashchange', onChange)
+  return () => window.removeEventListener('hashchange', onChange)
+}
+const getHash = () => window.location.hash.slice(1)
+const getServerHash = () => ''
 
-  const family = PRODUCT_FAMILIES.find((f) => f.id === familyId) ?? PRODUCT_FAMILIES[0]
-  const sub = family.subs.find((s) => s.id === subId) ?? family.subs[0]
+export default function Solutions() {
+  const { open: openEnquiry } = useEnquiry()
+  const hash = useSyncExternalStore(subscribeToHash, getHash, getServerHash)
+
+  /* A chip click outranks the hash, but only for as long as the hash stands —
+     the pick is stamped with the hash it was made against, so a later card
+     click still lands on its own range instead of being ignored. */
+  const [picked, setPicked] = useState<{ hash: string; family: string; sub: string } | null>(null)
+  const choice = picked?.hash === hash ? picked : null
+
+  const family =
+    PRODUCT_FAMILIES.find((f) => f.id === (choice?.family ?? hash)) ?? PRODUCT_FAMILIES[0]
+  const sub = family.subs.find((s) => s.id === choice?.sub) ?? family.subs[0]
+
+  /* the page length belongs to the range it was expanded on, so every other
+     range opens back at the first page without anything to reset */
+  const [paged, setPaged] = useState<{ sub: string; count: number } | null>(null)
+  const visibleCount = paged?.sub === sub.id ? paged.count : PAGE_SIZE
 
   const products = productsIn(sub.cat)
   const displayProducts = products.slice(0, visibleCount)
@@ -28,20 +52,18 @@ export default function Solutions() {
   const selectFamily = (id: string) => {
     const next = PRODUCT_FAMILIES.find((f) => f.id === id)
     if (!next) return
-    setFamilyId(id)
-    setSubId(next.subs[0].id)
-    setVisibleCount(PAGE_SIZE)
+    setPicked({ hash, family: id, sub: next.subs[0].id })
   }
 
   const selectSub = (next: ProductSub) => {
-    setSubId(next.id)
-    setVisibleCount(PAGE_SIZE)
+    setPicked({ hash, family: family.id, sub: next.id })
   }
 
   return (
-    /* the catalogue sits on its own sand band, so the white cards read as
-       shelves rather than as more of the page */
-    <section id="solutions" className="bg-[#f7f5ef]">
+    /* the band is white and the shelves carry the sand tint — the cards read as
+       raised surfaces over the page, and the white pack-shot wells inside them
+       stay the brightest thing in the section */
+    <section id="solutions" className="bg-white">
       <div className="max-w-[1180px] w-[calc(100%-2.6rem)] mx-auto">
 
         {/* Header */}
@@ -67,11 +89,13 @@ export default function Solutions() {
             return (
               <button
                 key={item.id}
+                /* the anchor the Why-SML card for this range points at */
+                id={item.id}
                 onClick={() => selectFamily(item.id)}
                 className={`snap-start flex-shrink-0 flex items-center gap-2 px-4 lg:px-5 py-2.5 rounded-lg border text-xs md:text-[0.82rem] font-bold transition-all duration-200 cursor-pointer ${
                   isActive
                     ? 'bg-[#43791f] border-[#43791f] text-white shadow-[0_6px_16px_rgba(67,121,31,0.22)]'
-                    : 'bg-white/70 border-[#193174]/10 text-[#193174]/75 hover:border-[#43791f]/40 hover:text-[#43791f] hover:bg-white'
+                    : 'bg-[#f7f5ef] border-[#193174]/10 text-[#193174]/75 hover:border-[#43791f]/40 hover:text-[#43791f] hover:bg-[#efebdd]'
                 }`}
               >
                 <span className="whitespace-nowrap">{item.label}</span>
@@ -95,7 +119,7 @@ export default function Solutions() {
           <aside className="lg:sticky lg:top-[calc(var(--nav-h)+var(--topbar-h)+1.5rem)]">
             {/* the rail carries the green header and a navy active row — the
                 reverse of the shelf, so the two halves stay distinguishable */}
-            <div className="rounded-2xl border border-[#193174]/8 bg-white overflow-hidden shadow-[0_4px_20px_rgba(25,49,116,0.03)]">
+            <div className="rounded-2xl border border-[#193174]/8 bg-[#f7f5ef] overflow-hidden shadow-[0_4px_20px_rgba(25,49,116,0.03)]">
               <div className="bg-[#43791f] px-5 py-4">
                 <span className="block text-[0.64rem] font-bold uppercase tracking-[0.2em] text-white/60">
                   Sub-categories
@@ -116,7 +140,7 @@ export default function Solutions() {
                       className={`w-full flex items-center justify-between gap-3 text-left px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
                         isActive
                           ? 'bg-[#193174] text-white shadow-sm'
-                          : 'text-[#193174] hover:bg-[#f7f5ef]'
+                          : 'text-[#193174] hover:bg-white'
                       }`}
                     >
                       <span>
@@ -152,23 +176,9 @@ export default function Solutions() {
           </aside>
 
           <div>
-            {/* the rail already names the range, so the shelf just carries
-                the escape hatch into the full catalogue */}
-            {products.length > 0 && (
-              <div className="flex justify-end mb-5">
-                <a
-                  href={`/products#${sub.cat}`}
-                  className="inline-flex items-center gap-1.5 text-sm font-bold text-[#43791f] hover:text-[#365f1a] transition-colors"
-                >
-                  View all
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            )}
-
             {products.length === 0 ? (
               /* a range the catalogue does not carry yet */
-              <div className="rounded-2xl border border-dashed border-[#193174]/18 bg-white/55 px-6 py-14 text-center">
+              <div className="rounded-2xl border border-dashed border-[#193174]/18 bg-[#f7f5ef] px-6 py-14 text-center">
                 <h4 className="text-lg font-bold text-[#193174] mb-2">
                   Available on request
                 </h4>
@@ -176,13 +186,14 @@ export default function Solutions() {
                   Our team can share the full specification and packaging options for this
                   range, along with registration details for your market.
                 </p>
-                <a
-                  href={`mailto:sml@sml-ltd.com?subject=Enquiry about SML ${sub.label}`}
-                  className="inline-flex items-center gap-2 text-sm font-bold text-white bg-[#43791f] hover:bg-[#365f1a] px-6 py-3 rounded-lg shadow-sm transition-colors"
+                <button
+                  type="button"
+                  onClick={() => openEnquiry({ range: sub.label })}
+                  className="inline-flex items-center gap-2 text-sm font-bold text-white bg-[#43791f] hover:bg-[#365f1a] px-6 py-3 rounded-lg shadow-sm transition-colors cursor-pointer"
                 >
                   Enquire about this range
                   <Mail className="w-4 h-4" />
-                </a>
+                </button>
               </div>
             ) : (
               <>
@@ -193,9 +204,12 @@ export default function Solutions() {
                     const slug = productSlug(product.name)
 
                     return (
+                      /* the whole card opens the spec sheet — the "View spec" link
+                         below stretches over it, so the card stays one anchor and
+                         only the Enquire button is lifted back above the overlay */
                       <article
                         key={product.name}
-                        className="flex gap-3.5 p-3 bg-white border border-[#193174]/8 rounded-2xl shadow-[0_2px_10px_rgba(25,49,116,0.02)] hover:border-[#43791f]/35 hover:shadow-[0_12px_28px_rgba(25,49,116,0.07)] transition-all duration-300 ease-out group"
+                        className="relative cursor-pointer flex gap-3.5 p-3 bg-[#f7f5ef] border border-[#193174]/8 rounded-2xl shadow-[0_2px_10px_rgba(25,49,116,0.02)] hover:border-[#43791f]/35 hover:shadow-[0_12px_28px_rgba(25,49,116,0.07)] transition-all duration-300 ease-out group has-[a:focus-visible]:border-[#43791f]/45 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-[#43791f]/30"
                       >
                         {/* most pack shots are photographed on white, so the well
                             stays white and takes a hairline instead of a tint */}
@@ -228,18 +242,23 @@ export default function Solutions() {
                           <div className="mt-auto pt-3.5 flex items-center gap-3">
                             <a
                               href={`/product/${slug}`}
-                              className="inline-flex items-center gap-1 text-[0.8rem] font-bold text-[#193174]/75 hover:text-[#193174] transition-colors"
+                              aria-label={`View spec for ${product.name}`}
+                              className="inline-flex items-center gap-1 text-[0.8rem] font-bold text-[#193174]/75 group-hover:text-[#193174] transition-colors focus-visible:outline-none after:content-[''] after:absolute after:inset-0 after:rounded-2xl"
                             >
                               View spec
                               <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                             </a>
                             <span className="w-px h-3.5 bg-[#193174]/12" />
-                            <a
-                              href={`mailto:sml@sml-ltd.com?subject=Enquiry about SML ${product.name}&body=Hello SML Team,%0D%0A%0D%0AI am writing to enquire about your product: ${product.name} (${product.catLabel}). Please share details regarding specifications, packaging availability, and pricing.%0D%0A%0D%0AThank you.`}
-                              className="inline-flex items-center text-[0.78rem] font-bold text-white bg-[#43791f] hover:bg-[#365f1a] px-3 py-1.5 rounded-lg transition-colors"
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openEnquiry({ product: product.name, category: product.catLabel })
+                              }
+                              aria-label={`Enquire about ${product.name}`}
+                              className="relative z-[1] inline-flex items-center text-[0.78rem] font-bold text-white bg-[#43791f] hover:bg-[#365f1a] px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                             >
                               Enquire
-                            </a>
+                            </button>
                           </div>
                         </div>
                       </article>
@@ -250,8 +269,8 @@ export default function Solutions() {
                 {hasMore && (
                   <div className="text-center mt-10">
                     <button
-                      onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                      className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold text-[#193174] bg-white border border-[#193174]/10 hover:border-[#43791f]/40 hover:text-[#43791f] rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 cursor-pointer"
+                      onClick={() => setPaged({ sub: sub.id, count: visibleCount + PAGE_SIZE })}
+                      className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-bold text-[#193174] bg-[#f7f5ef] border border-[#193174]/10 hover:border-[#43791f]/40 hover:text-[#43791f] rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 cursor-pointer"
                     >
                       Show more
                       <ChevronDown className="w-4 h-4" />

@@ -5,7 +5,7 @@ import { vars } from '@/lib/css'
 export default function Mantra() {
   return (
     <section 
-      className="relative overflow-hidden bg-[#193174]/4 before:content-[''] before:absolute before:top-[-22%] before:right-[-6%] before:w-[min(46vw,620px)] before:aspect-square before:bg-[#43791f]/7 before:rounded-bl-[62%] before:pointer-events-none py-14 md:py-20 lg:py-24" 
+      className="relative overflow-hidden bg-white before:content-[''] before:absolute before:top-[-22%] before:right-[-6%] before:w-[min(46vw,620px)] before:aspect-square before:bg-[#43791f]/7 before:rounded-bl-[62%] before:pointer-events-none py-14 md:py-20 lg:py-24"
       id="mantra"
     >
       <div className="wrap relative z-10">
@@ -36,8 +36,10 @@ export default function Mantra() {
             </blockquote>
           </div>
 
-          <div 
-            className="bg-white border border-[#193174]/9 rounded-[28px] p-5 md:p-[2.6vw] lg:p-7.5 shadow-[0_30px_70px_rgba(25,49,116,0.1)] grid gap-4 w-full max-w-[560px] lg:max-w-none" 
+          {/* #f6f7f9 is the navy-at-4% tint the section itself used to carry —
+              set opaque so the green corner blob does not wash through it */}
+          <div
+            className="bg-[#f6f7f9] border border-[#193174]/9 rounded-[28px] p-5 md:p-[2.6vw] lg:p-7.5 shadow-[0_30px_70px_rgba(25,49,116,0.1)] grid gap-4 w-full max-w-[560px] lg:max-w-none"
             data-reveal="right" 
             style={vars({ '--d': '120ms' })}
           >

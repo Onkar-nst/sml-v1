@@ -24,17 +24,18 @@ export default function Cta() {
             Whether you are a farmer, a distributor or an international partner, our team is
             ready to help you find the right solution for your soil and your crop.
           </p>
-          <div className="flex gap-[0.85rem] justify-center flex-wrap">
-            <a 
-              href={`mailto:${CONTACT.email}`} 
-              className="inline-flex items-center justify-center gap-[0.55rem] px-[1.85rem] py-[0.95rem] rounded-full font-sans font-semibold text-[0.95rem] cursor-pointer transition-all duration-300 ease-out whitespace-nowrap bg-[#f4f0e5] text-[#1f3d2c] hover:bg-white hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.25)]"
+          {/* Side by side on every width — the two buttons split the row on mobile */}
+          <div className="flex flex-nowrap sm:flex-wrap gap-2 sm:gap-[0.85rem] justify-center">
+            <a
+              href={`mailto:${CONTACT.email}`}
+              className="flex-1 basis-0 min-w-0 sm:flex-none sm:basis-auto inline-flex items-center justify-center gap-[0.4rem] sm:gap-[0.55rem] px-3 py-3 sm:px-[1.85rem] sm:py-[0.95rem] rounded-full font-sans font-semibold text-[0.8rem] sm:text-[0.95rem] cursor-pointer transition-all duration-300 ease-out sm:whitespace-nowrap bg-[#f4f0e5] text-[#1f3d2c] hover:bg-white hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.25)]"
             >
               Email Our Team
-              <Mail />
+              <Mail size={16} className="shrink-0 sm:size-6" />
             </a>
-            <a 
-              href={CONTACT.phoneHref} 
-              className="inline-flex items-center justify-center px-[1.85rem] py-[0.95rem] rounded-full font-sans font-semibold text-[0.95rem] border border-white/45 text-white cursor-pointer transition-all duration-300 ease-out whitespace-nowrap hover:bg-[#f4f0e5] hover:text-[#1f3d2c] hover:border-[#f4f0e5] hover:-translate-y-0.5"
+            <a
+              href={CONTACT.phoneHref}
+              className="flex-1 basis-0 min-w-0 sm:flex-none sm:basis-auto inline-flex items-center justify-center px-3 py-3 sm:px-[1.85rem] sm:py-[0.95rem] rounded-full font-sans font-semibold text-[0.8rem] sm:text-[0.95rem] border border-white/45 text-white cursor-pointer transition-all duration-300 ease-out sm:whitespace-nowrap hover:bg-[#f4f0e5] hover:text-[#1f3d2c] hover:border-[#f4f0e5] hover:-translate-y-0.5"
             >
               {CONTACT.phone}
             </a>

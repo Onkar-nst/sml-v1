@@ -36,9 +36,10 @@ export const NAV_LINKS = [
 /* -------------------------------------------------------------------- hero */
 
 export const HERO = {
-  image:
-    'https://sml-ltd.com/wp-content/uploads/2024/10/sml-banner2-1.jpg',
-  imageAlt: 'Young seedlings rising from dark soil',
+  /* the space in the filename is percent-encoded so the URL stays valid */
+  image: '/new%20hero.png',
+  imageAlt:
+    'A farmer checking crop data on a tablet at sunrise, standing in rows of young crop',
   eyebrow: 'Transforming Agriculture Since 1971',
   sub:
     'SML Limited is a leader in advanced agricultural solutions, grounded in research: ' +
@@ -55,6 +56,13 @@ export interface WhyCard {
   body: string
   /** sits behind the copy as a soft watermark — see WhySml */
   img: string
+  /**
+   * The `PRODUCT_FAMILIES` id this card stands for. The card links to `#<family>`,
+   * which is the id of that range's chip in Our Solutions — so the click scrolls
+   * down to the section and opens the range in one go. Must stay in step with
+   * the family ids in data/products.
+   */
+  family: string
 }
 
 export const WHY_CARDS: WhyCard[] = [
@@ -64,6 +72,7 @@ export const WHY_CARDS: WhyCard[] = [
     title: 'Crop Nutrition',
     body: 'Balanced nutrition for every crop stage, backed by science.',
     img: 'https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=700&q=65',
+    family: 'crop-nutrition',
   },
   {
     icon: 'shield',
@@ -71,6 +80,7 @@ export const WHY_CARDS: WhyCard[] = [
     title: 'Crop Protection',
     body: 'Effective, responsible protection from seed to yield.',
     img: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&w=700&q=65',
+    family: 'crop-protection',
   },
   {
     icon: 'bug',
@@ -78,6 +88,7 @@ export const WHY_CARDS: WhyCard[] = [
     title: 'Other Insecticides',
     body: 'Broad spectrum pest control across every major crop.',
     img: 'https://images.unsplash.com/photo-1536657464919-892534f60d6e?auto=format&fit=crop&w=700&q=65',
+    family: 'other-insecticides',
   },
   {
     icon: 'sprout',
@@ -85,6 +96,7 @@ export const WHY_CARDS: WhyCard[] = [
     title: 'PGR',
     body: 'Plant growth regulators that time and shape the yield.',
     img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=700&q=65',
+    family: 'pgr',
   },
   {
     icon: 'leaf',
@@ -92,6 +104,7 @@ export const WHY_CARDS: WhyCard[] = [
     title: 'Biologicals',
     body: 'Sustainable biological crop inputs, gentle on the environment.',
     img: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&w=700&q=65',
+    family: 'biologicals',
   },
 ]
 
@@ -476,9 +489,11 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   },
 ]
 
+/* the accounts linked from the footer of sml-ltd.com — several still sit
+   under the former Sulphur Mills name, which is why the handles vary */
 export const SOCIALS = [
-  { label: 'Facebook', href: '#', icon: 'facebook' },
-  { label: 'LinkedIn', href: '#', icon: 'linkedin' },
-  { label: 'YouTube', href: '#', icon: 'youtube' },
-  { label: 'Instagram', href: '#', icon: 'instagram' },
+  { label: 'Facebook', href: 'https://www.facebook.com/sulphurmillslimited/', icon: 'facebook' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/sulphur-mills-ltd-1960/', icon: 'linkedin' },
+  { label: 'YouTube', href: 'https://www.youtube.com/channel/UCYjbHn5oPL9QQlN4FHW76Dg', icon: 'youtube' },
+  { label: 'Instagram', href: 'https://www.instagram.com/sml_ltd/', icon: 'instagram' },
 ] as const

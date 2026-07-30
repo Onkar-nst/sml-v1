@@ -1,5 +1,6 @@
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
+import Presence from '@/components/sections/Presence'
 import Solutions from '@/components/sections/Solutions'
 import Brand from '@/components/sections/Brand'
 import Mantra from '@/components/sections/Mantra'
@@ -14,14 +15,16 @@ import Divisions from '@/components/sections/Divisions'
  * The homepage, in the order the sections appear.
  *
  * Everything here is a Server Component except the pieces that hold state
- * or measure the DOM — the Presence counters (rendered inside Brand),
- * Footprint (map assembly) and Faq (accordion).
+ * or measure the DOM — the Presence counters, Footprint (map assembly) and
+ * Faq (accordion).
  */
 export default function HomePage() {
   return (
     <>
       <Hero />
       <About />
+      {/* the counters back up the scale claims About just made */}
+      <Presence />
       <Solutions />
       <Brand />
       <Mantra />

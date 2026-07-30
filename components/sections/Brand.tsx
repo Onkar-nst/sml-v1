@@ -1,6 +1,5 @@
 import { vars } from '@/lib/css'
 import BrandShowcase from '@/components/sections/BrandShowcase'
-import Presence from '@/components/sections/Presence'
 
 /** The three things the Reap name stands for, from the brand copy. */
 const PILLARS = [
@@ -15,12 +14,17 @@ export default function Brand() {
       id="brand" 
       className="relative isolate overflow-hidden py-18 md:py-24 lg:py-26 bg-[linear-gradient(135deg,#193174_0%,#122559_52%,#365f1a_145%)] text-white/78"
     >
-      {/* the brand mantra — "more from less" — as a quiet Devanagari watermark */}
-      <span 
-        className="absolute -z-10 -right-2 top-[0.12em] text-[6.5rem] md:text-[13vw] lg:text-[11.5rem] font-semibold leading-none whitespace-nowrap text-white/[0.045] pointer-events-none select-none"
+      {/* The brand mantra — "more from less" — as a quiet Devanagari watermark.
+          On one line it is wider than a phone, so below md it breaks after
+          "कम से", sits in from the right edge and carries a little more white
+          to stay legible at the smaller size. */}
+      <span
+        className="absolute -z-10 right-4 md:-right-2 top-8 md:top-[0.12em] text-[6.5rem] md:text-[13vw] lg:text-[11.5rem] font-semibold leading-[1.05] md:leading-none text-right whitespace-normal md:whitespace-nowrap text-white/[0.085] md:text-white/[0.045] pointer-events-none select-none"
         aria-hidden="true"
       >
-        कम से अधिक
+        कम से
+        <br className="md:hidden" />
+        {' '}अधिक
       </span>
 
       <div className="wrap">
@@ -67,11 +71,6 @@ export default function Brand() {
 
         {/* full-bleed brand film card */}
         <BrandShowcase />
-
-        {/* the company-scale counters close the panel */}
-        <div className="mt-12 md:mt-16">
-          <Presence />
-        </div>
       </div>
     </section>
   )
