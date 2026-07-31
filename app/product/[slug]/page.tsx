@@ -96,15 +96,22 @@ export default async function ProductDetailPage({ params }: Props) {
               exactly where the related-products shelf begins. */}
           <div className="flex flex-col gap-3.5 lg:sticky lg:top-[calc(var(--nav-h)+var(--topbar-h)+1.5rem)] lg:max-h-[calc(100dvh-var(--nav-h)-var(--topbar-h)-3rem)] lg:overflow-y-auto scrollbar-none">
             <div className="relative bg-white border border-[#193174]/8 rounded-2xl p-8 md:p-10 shadow-[0_4px_20px_rgba(25,49,116,0.03)]">
-              <span className="absolute top-4 left-4 bg-[#43791f]/10 text-[#43791f] text-[0.62rem] font-bold px-2.5 py-1 rounded uppercase tracking-[0.14em]">
+              {/* z-10 because the scaled pack shot paints in the positioned layer
+                  too and would otherwise cover this. #ecf2e9 is the old green-at-
+                  10% tint resolved against white, set opaque so the label still
+                  reads where a dark pack shot runs underneath it. */}
+              <span className="absolute z-10 top-4 left-4 bg-[#ecf2e9] text-[#43791f] text-[0.62rem] font-bold px-2.5 py-1 rounded uppercase tracking-[0.14em]">
                 {product.catLabel}
               </span>
               <div className="aspect-square grid place-items-center">
                 {product.img ? (
+                  /* scaled up rather than given a bigger box — the pack shots
+                     carry their own whitespace, so the card keeps its size and
+                     only the product fills more of it */
                   <img
                     src={product.img}
                     alt={`${product.name} pack shot`}
-                    className="max-h-full max-w-full object-contain"
+                    className="max-h-full max-w-full object-contain scale-[1.15]"
                   />
                 ) : (
                   <span className="text-[#193174]/30 text-sm">Pack shot coming soon</span>
@@ -112,25 +119,24 @@ export default async function ProductDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* name, then what is in it, then how it is sold — each fact under
-                its own label so the card reads top to bottom */}
-            <div className="rounded-2xl bg-[#43791f] text-white px-6 py-5 shadow-[0_10px_26px_rgba(67,121,31,0.18)]">
-              <h1 className="text-[1.55rem] md:text-[1.9rem] font-bold leading-tight m-0 text-white">
+            {/* Name over the pack sizes. Kept deliberately tight — this card and
+                the two buttons under it have to clear the sticky column's height
+                together, or the actions fall below the fold and need scrolling. */}
+            <div className="rounded-2xl bg-[#43791f] text-white px-5 py-4 shadow-[0_10px_26px_rgba(67,121,31,0.18)]">
+              <h1 className="text-[1.35rem] md:text-[1.6rem] font-bold leading-tight m-0 text-white">
                 {product.name}
               </h1>
-
-             
 
               {/* no rule above this one — the labels already separate the two
                   facts, and a second line inside the card read as clutter */}
               {detail?.packs && (
-                <div className="mt-5">
+                <div className="mt-3.5">
                   <span className="block text-[0.62rem] font-bold uppercase tracking-[0.2em] text-white/65">
                     Available pack sizes
                   </span>
                   {/* the pack list is published as a pipe-separated run — each
                       size is set as its own chip so the options scan at a glance */}
-                  <div className="flex flex-wrap gap-1.5 mt-2">
+                  <div className="flex flex-wrap gap-1.5 mt-1.5">
                     {detail.packs
                       .split('|')
                       .map((pack) => pack.trim())
@@ -138,7 +144,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       .map((pack) => (
                         <span
                           key={pack}
-                          className="inline-flex items-center rounded-md bg-white/12 px-2.5 py-1 text-[0.78rem] font-bold text-white/90"
+                          className="inline-flex items-center rounded-md bg-white/12 px-2 py-0.5 text-[0.75rem] font-bold text-white/90"
                         >
                           {pack}
                         </span>
